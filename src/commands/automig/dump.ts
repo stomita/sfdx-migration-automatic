@@ -1,6 +1,7 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
-import fs from 'fs-extra';
+import {readFile, writeFile} from 'fs-extra';
+import * as path from 'path';
 import {AutoMigrator, DumpQuery} from 'salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
@@ -21,8 +22,8 @@ export default class Dump extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    objects: flags.array({char: 'o', description: messages.getMessage('objectFlagDescription')}),
     config: flags.string({char: 'f', description: messages.getMessage('configFlagDescription')}),
+    objects: flags.array({char: 'o', description: messages.getMessage('objectFlagDescription')}),
     outdir: flags.string({char: 'd', description: messages.getMessage('outdirFlagDescription')})
   };
 
@@ -46,19 +47,23 @@ export default class Dump extends SfdxCommand {
     let config: DumpConfig;
     if (this.flags.config) {
       const configFileName: string = this.flags.config;
-      const fileData = await fs.readFile(configFileName, 'utf8');
+      const configDir = path.dirname(configFileName);
+      const fileData = await readFile(configFileName, 'utf8');
       config = JSON.parse(fileData) as DumpConfig;
       if (this.flags.outdir) {
         config.outDir = this.flags.outdir;
+      } else if (!path.isAbsolute(config.outDir)) {
+        config.outDir = path.join(configDir, config.outDir);
       }
     } else if (this.flags.objects) {
-      console.log('flags =>', this.flags);
       config = {
-        outDir: this.flags.outdir,
+        outDir: this.flags.outdir || '.',
         targets: this.flags.objects.map(object => ({
           object
         }))
       };
+    } else {
+      throw new Error('No --config or --objects options are supplied to command arg');
     }
 
     const conn = this.org.getConnection();
@@ -69,11 +74,12 @@ export default class Dump extends SfdxCommand {
       config.targets.map(async ({ object }, i) => {
         const csv = csvs[i];
         const filename = `${object}.csv`;
-        const filepath = `${config.outDir}`;
-        await fs.writeFile(filename, 'utf8', csv);
+        const filepath = path.join(config.outDir, filename);
+        await writeFile(filepath, csv, 'utf8');
         return filepath;
       })
     );
+    this.ux.log(filepaths.join('\n'));
     return { filepaths };
   }
 }
