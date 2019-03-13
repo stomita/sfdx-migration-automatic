@@ -22,30 +22,9 @@ jobs:
           command: |
             ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
             curl -s https://codecov.io/bash | bash
-  cache:
-    docker:
-      - image: node:latest
-    working_directory: ~/cli
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: yarn
       - save_cache:
           key: v1-npm-{{checksum ".circleci/config.yml"}}-{{checksum "yarn.lock"}}
           paths:
             - ~/cli/node_modules
             - /usr/local/share/.cache/yarn
             - /usr/local/share/.config/yarn
-
-workflows:
-  version: 2
-  "sfdx-migration-automatic":
-    jobs:
-      - build
-      - cache:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
