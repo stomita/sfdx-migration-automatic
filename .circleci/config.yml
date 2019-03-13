@@ -42,7 +42,7 @@ workflows:
   version: 2
   "sfdx-migration-automatic":
     jobs:
-      - node-latest
+      - build
       - cache:
           filters:
             tags:
