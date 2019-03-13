@@ -1,7 +1,7 @@
 {
   "name": "sfdx-migration-automatic",
   "version": "1.0.0",
-  "author": "Shinichi Tomita @stomita",
+  "author": "Shinichi Tomita <shinichi.tomita@gmail.com>",
   "bugs": "https://github.com/stomita/sfdx-migration-automatic/issues",
   "dependencies": {
     "@oclif/command": "1",
