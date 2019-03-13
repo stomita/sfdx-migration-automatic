@@ -30,15 +30,15 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx-migration-automatic <%= command.id %> [-o <array>] [-f <string>] [-d <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---o-array--f-string--d-string--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---f-string--o-array--d-string--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx-migration-automatic <%= command.id %> [-o <array>] [-f <string>] [-d <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Dump data in Salesforce org to CSV files, for migration usage
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:dump [-o <array>] [-f <string>] [-d <string>] [-v <string>] [-u <string>] 
+  $ sfdx-migration-automatic automig:dump [-f <string>] [-o <array>] [-d <string>] [-v <string>] [-u <string>] 
   [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
