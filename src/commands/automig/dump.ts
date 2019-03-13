@@ -16,22 +16,22 @@ export default class Dump extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  '$ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --objects Opportunity,Case,Account:related,Task:related --outdir ./dump',
-  '$ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --config automig-dump-config.json'
+  '$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump',
+  '$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json'
   ];
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
     config: flags.string({char: 'f', description: messages.getMessage('configFlagDescription')}),
-    objects: flags.array({char: 'o', description: messages.getMessage('objectFlagDescription')}),
-    outdir: flags.string({char: 'd', description: messages.getMessage('outdirFlagDescription')})
+    objects: flags.array({char: 'o', description: messages.getMessage('objectsFlagDescription')}),
+    outputdir: flags.string({char: 'd', description: messages.getMessage('outputDirFlagDescription')})
   };
 
   // Comment this out if your command does not require an org username
   protected static requiresUsername = true;
 
   // Comment this out if your command does not support a hub org username
-  protected static supportsDevhubUsername = true;
+  protected static supportsDevhubUsername = false;
 
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
@@ -40,7 +40,7 @@ export default class Dump extends SfdxCommand {
     // const name = this.flags.name || 'world';
 
     interface DumpConfig {
-      outDir: string;
+      outputDir: string;
       targets: DumpQuery[];
     }
 
@@ -50,14 +50,14 @@ export default class Dump extends SfdxCommand {
       const configDir = path.dirname(configFileName);
       const fileData = await readFile(configFileName, 'utf8');
       config = JSON.parse(fileData) as DumpConfig;
-      if (this.flags.outdir) {
-        config.outDir = this.flags.outdir;
-      } else if (!path.isAbsolute(config.outDir)) {
-        config.outDir = path.join(configDir, config.outDir);
+      if (this.flags.outputdir) {
+        config.outputDir = this.flags.outputdir;
+      } else if (!path.isAbsolute(config.outputDir)) {
+        config.outputDir = path.join(configDir, config.outputDir);
       }
     } else if (this.flags.objects) {
       config = {
-        outDir: this.flags.outdir || '.',
+        outputDir: this.flags.outputdir || '.',
         targets: this.flags.objects.map(object => ({
           object
         }))
@@ -74,7 +74,7 @@ export default class Dump extends SfdxCommand {
       config.targets.map(async ({ object }, i) => {
         const csv = csvs[i];
         const filename = `${object}.csv`;
-        const filepath = path.join(config.outDir, filename);
+        const filepath = path.join(config.outputDir, filename);
         await writeFile(filepath, csv, 'utf8');
         return filepath;
       })

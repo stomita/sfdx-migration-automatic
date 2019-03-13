@@ -18,7 +18,7 @@ describe('automig:dump', () => {
     .stub(fs, 'readFile', function readFileStub(filepath) {
       if (filepath === 'path/to/automig-dump-config.json') {
         return JSON.stringify({
-          outDir: 'dist',
+          outputDir: 'dist',
           targets: [{
             object: 'Account',
           }, {
@@ -37,8 +37,8 @@ describe('automig:dump', () => {
   /**
    * 
    */
-  ts.command(['automig:dump', '--objects', 'Account,Contact', '--outdir', 'path/to/dir'])
-    .it('runs automig:dump --objects Account,Contact --outdir path/to/dir', ctx => {
+  ts.command(['automig:dump', '--objects', 'Account,Contact', '--outputdir', 'path/to/dir'])
+    .it('runs automig:dump --objects Account,Contact --outputdir path/to/dir', ctx => {
       expect(ctx.stdout).includes('path/to/dir/Account.csv');
       expect(ctx.stdout).includes('path/to/dir/Contact.csv');
       for (const filepath of ['path/to/dir/Account.csv', 'path/to/dir/Account.csv']) {
