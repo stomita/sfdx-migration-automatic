@@ -1,7 +1,7 @@
-import fs from 'fs-extra';
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
-import {AutoMigrator} from 'salesforce-migration-automatic';
+import fs from 'fs-extra';
+import {AutoMigrator, DumpQuery} from 'salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -15,8 +15,8 @@ export default class Dump extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  `$ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --objects Opportunity,Case,Account:related,Task:related --outdir ./dump`,
-  `$ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --config automig-dump-config.json`,
+  '$ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --objects Opportunity,Case,Account:related,Task:related --outdir ./dump',
+  '$ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --config automig-dump-config.json'
   ];
 
   protected static flagsConfig = {
@@ -39,24 +39,25 @@ export default class Dump extends SfdxCommand {
     // const name = this.flags.name || 'world';
 
     interface DumpConfig {
-      outDir: string,
-      targets: Array<any>,
-    };
+      outDir: string;
+      targets: DumpQuery[];
+    }
 
     let config: DumpConfig;
-    if (this.flags.configFile) {
-      const configFileName: string = this.flags.configFile;
+    if (this.flags.config) {
+      const configFileName: string = this.flags.config;
       const fileData = await fs.readFile(configFileName, 'utf8');
-      config = JSON.parse(fileData) as DumpConfig
-      if (this.flags.outDir) {
-        config.outDir = this.flags.outDir;
+      config = JSON.parse(fileData) as DumpConfig;
+      if (this.flags.outdir) {
+        config.outDir = this.flags.outdir;
       }
     } else if (this.flags.objects) {
+      console.log('flags =>', this.flags);
       config = {
-        outDir: this.flags.outDir,
-        targets: (this.flags.objects as string).split(/\s*,\s*/).map((object) => ({
-          object,
-        })),
+        outDir: this.flags.outdir,
+        targets: this.flags.objects.map(object => ({
+          object
+        }))
       };
     }
 
@@ -68,7 +69,7 @@ export default class Dump extends SfdxCommand {
       config.targets.map(async ({ object }, i) => {
         const csv = csvs[i];
         const filename = `${object}.csv`;
-        const filepath = `${config.outDir}`
+        const filepath = `${config.outDir}`;
         await fs.writeFile(filename, 'utf8', csv);
         return filepath;
       })
