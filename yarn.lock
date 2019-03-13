@@ -510,6 +510,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
+base64-url@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/base64-url/-/base64-url-2.2.0.tgz#4bbd6a825df1be522d39e566a721ede51144041a"
+  integrity sha512-Y4qHHAE+rWjmAFPQmHPiiD+hWwM/XvuFLlP6kVxlwZJK7rjiE2uIQR9tZ37iEr1E6iCj9799yxMAmiXzITb3lQ==
+
 base@^0.11.1:
   version "0.11.2"
   resolved "https://registry.yarnpkg.com/base/-/base-0.11.2.tgz#7bde5ced145b6d551a90db87f83c558b4eb48a8f"
@@ -912,6 +917,11 @@ csv-parse@^1.1.1:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-1.3.3.tgz#d1cfd8743c2f849a0abb2fd544db56695d19a490"
   integrity sha1-0c/YdDwvhJoKuy/VRNtWaV0ZpJA=
+
+csv-parse@^4.3.3:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.3.4.tgz#fc896c170ebbdf6fb286de85c41bbaea4973d25f"
+  integrity sha512-M1R4WL+vt81+GnkKzi0s1qQM6WXvHQKDecNkpozzAEG8LHvIW9bq5eBnOKFQn50fTuAos7JodBh/07MK+J6G2Q==
 
 csv-stringify@^1.0.4:
   version "1.1.2"
@@ -1909,6 +1919,27 @@ jsforce@1.8.5:
     request "^2.72.0"
     xml2js "^0.4.16"
 
+jsforce@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-1.9.1.tgz#a112fb0b9ece04fe14d2e14bc72a76e46ff544de"
+  integrity sha512-AP4wVnz8guvF8zvHdk2xA2DZxvOq3MGbLNPu7tPVOyO38D1qt+psWpYmHgncjkmy9LoSk58K+dU56YE38zqMlg==
+  dependencies:
+    base64-url "^2.2.0"
+    co-prompt "^1.0.0"
+    coffeescript "^1.10.0"
+    commander "^2.9.0"
+    csv-parse "^1.1.1"
+    csv-stringify "^1.0.4"
+    faye "^1.2.0"
+    inherits "^2.0.1"
+    lodash "^4.11.1"
+    multistream "^2.0.5"
+    opn "^5.3.0"
+    promise "^7.1.1"
+    readable-stream "^2.1.0"
+    request "^2.72.0"
+    xml2js "^0.4.16"
+
 json-parse-better-errors@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
@@ -2848,6 +2879,14 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
+
+salesforce-migration-automatic@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/salesforce-migration-automatic/-/salesforce-migration-automatic-1.0.0.tgz#3371d255b7ce806285ed081620e5cea1287afb56"
+  integrity sha512-1ujl9hWjTU09nPNPwqMIHG1L799u4i6bi+bv1mi2KILyzoN6lqu51eNXee0F3cXmd94Hav1mlH6NUTafMXrNvA==
+  dependencies:
+    csv-parse "^4.3.3"
+    jsforce "^1.9.1"
 
 samsam@1.3.0:
   version "1.3.0"
