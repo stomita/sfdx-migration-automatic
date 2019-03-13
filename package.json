@@ -45,11 +45,7 @@
   "license": "MIT",
   "oclif": {
     "commands": "./lib/commands",
-    "topics": {
-      "hello": {
-        "description": "Commands to say hello."
-      }
-    },
+    "topics": {},
     "devPlugins": [
       "@oclif/plugin-help"
     ]
