@@ -30,35 +30,59 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---f-string--o-array--d-string--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---f-string--o-array--d-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---d-string--m-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-v <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Dump data in Salesforce org to CSV files, for migration usage
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:dump [-f <string>] [-o <array>] [-d <string>] [-v <string>] [-u <string>] 
-  [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:dump [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] 
+  [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
-  -d, --outdir=outdir                              output destination directory of dumped CSV files
-  -f, --config=config                              dump configuration file
-  -o, --objects=objects                            objects to dump
-  -u, --targetusername=targetusername              username or alias for the target org; overrides default target org
-  -v, --targetdevhubusername=targetdevhubusername  username or alias for the dev hub org; overrides default dev hub org
-  --apiversion=apiversion                          override the api version used for api requests made by this command
-  --json                                           format output as json
-  --loglevel=(trace|debug|info|warn|error|fatal)   [default: warn] logging level for this command invocation
+  -d, --outputdir=outputdir                       output directory of dumped CSV files
+  -f, --config=config                             dump configuration file
+  -o, --objects=objects                           objects to dump
+  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+  --apiversion=apiversion                         override the api version used for api requests made by this command
+  --json                                          format output as json
+  --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
 
 EXAMPLES
-  $ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --objects 
-  Opportunity,Case,Account:related,Task:related --outdir ./dump
-  $ sfdx automig:dump --targetusername username@example.com --targetdevhubusername devhub@example.org --config 
-  automig-dump-config.json
+  $ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related 
+  --outputdir ./dump
+  $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
 _See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.0.0/src/commands/automig/dump.ts)_
+
+## `sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+
+Load data from CSV files in directory to Salesforce org to CSV files
+
+```
+USAGE
+  $ sfdx-migration-automatic automig:load -d <string> [-m <array>] [-u <string>] [--apiversion <string>] [--json] 
+  [--loglevel trace|debug|info|warn|error|fatal]
+
+OPTIONS
+  -d, --inputdir=inputdir                         (required) directory of loading CSV files
+  -m, --mappingobjects=mappingobjects             list of object and key field pair to map to existing records
+  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+  --apiversion=apiversion                         override the api version used for api requests made by this command
+  --json                                          format output as json
+  --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
+
+EXAMPLES
+  $ sfdx automig:load --targetusername username@example.com --dir ./data
+  $ sfdx automig:load --targetusername username@example.com --dir ./data --mappingobjects 
+  User:Email,RecordType:DeveloperName
+```
+
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.0.0/src/commands/automig/load.ts)_
 <!-- commandsstop -->
 <!-- debugging-your-plugin -->
 # Debugging your plugin

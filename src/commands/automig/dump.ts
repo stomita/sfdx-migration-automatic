@@ -58,9 +58,10 @@ export default class Dump extends SfdxCommand {
     } else if (this.flags.objects) {
       config = {
         outputDir: this.flags.outputdir || '.',
-        targets: this.flags.objects.map(object => ({
-          object
-        }))
+        targets: this.flags.objects.map((o: string) => {
+          const [object,target = 'query'] = o.split(':');
+          return { object, target };
+        }),
       };
     } else {
       throw new Error('No --config or --objects options are supplied to command arg');
@@ -68,7 +69,9 @@ export default class Dump extends SfdxCommand {
 
     const conn = this.org.getConnection();
     const am = new AutoMigrator(conn);
-
+    am.on('dumpProgress', (status) => {
+      this.ux.log(`fetched count: ${status.fetchedCount}, ${JSON.stringify(status.fetchedCountPerObject)}`);
+    });
     const csvs = await am.dumpAsCSVData(config.targets);
     const filepaths = await Promise.all(
       config.targets.map(async ({ object }, i) => {
