@@ -1,6 +1,7 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
-import {readFile, readdir} from 'fs-extra';
+import {readdir, readFile} from 'fs-extra';
+import {Connection} from 'jsforce';
 import * as path from 'path';
 import {AutoMigrator, UploadInput} from 'salesforce-migration-automatic';
 
@@ -17,13 +18,13 @@ export default class Load extends SfdxCommand {
 
   public static examples = [
   '$ sfdx automig:load --targetusername username@example.com --dir ./data',
-  '$ sfdx automig:load --targetusername username@example.com --dir ./data --mappingobjects User:Email,RecordType:DeveloperName',
+  '$ sfdx automig:load --targetusername username@example.com --dir ./data --mappingobjects User:Email,RecordType:DeveloperName'
   ];
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
     inputdir: flags.string({char: 'd', description: messages.getMessage('inputDirFlagDescription'), required: true }),
-    mappingobjects: flags.array({char: 'm', description: messages.getMessage('mappingObjectsFlagDescription')}),
+    mappingobjects: flags.array({char: 'm', description: messages.getMessage('mappingObjectsFlagDescription')})
   };
 
   // Comment this out if your command does not require an org username
@@ -41,7 +42,8 @@ export default class Load extends SfdxCommand {
       throw new Error('No --inputdir options found, specify directory with CSV files');
     }
 
-    const conn = this.org.getConnection();
+    const { accessToken, instanceUrl } = this.org.getConnection();
+    const conn = new Connection({ accessToken, instanceUrl });
     const am = new AutoMigrator(conn);
 
     const filenames = await readdir(inputDir);

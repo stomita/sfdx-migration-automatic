@@ -1,6 +1,7 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import {readFile, writeFile} from 'fs-extra';
+import {Connection} from 'jsforce';
 import * as path from 'path';
 import {AutoMigrator, DumpQuery} from 'salesforce-migration-automatic';
 
@@ -59,17 +60,18 @@ export default class Dump extends SfdxCommand {
       config = {
         outputDir: this.flags.outputdir || '.',
         targets: this.flags.objects.map((o: string) => {
-          const [object,target = 'query'] = o.split(':');
+          const [object, target = 'query'] = o.split(':');
           return { object, target };
-        }),
+        })
       };
     } else {
       throw new Error('No --config or --objects options are supplied to command arg');
     }
 
-    const conn = this.org.getConnection();
+    const { accessToken, instanceUrl } = this.org.getConnection();
+    const conn = new Connection({ accessToken, instanceUrl });
     const am = new AutoMigrator(conn);
-    am.on('dumpProgress', (status) => {
+    am.on('dumpProgress', status => {
       this.ux.log(`fetched count: ${status.fetchedCount}, ${JSON.stringify(status.fetchedCountPerObject)}`);
     });
     const csvs = await am.dumpAsCSVData(config.targets);
