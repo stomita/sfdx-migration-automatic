@@ -68,13 +68,21 @@ export default class Dump extends SfdxCommand {
       throw new Error('No --config or --objects options are supplied to command arg');
     }
 
-    const { accessToken, instanceUrl } = this.org.getConnection();
-    const conn = new Connection({ accessToken, instanceUrl });
-    const am = new AutoMigrator(conn);
+    const conn = this.org.getConnection();
+    await conn.request('/');
+    const { accessToken, instanceUrl } = conn;
+    const conn2 = new Connection({ accessToken, instanceUrl });
+    conn2.bulk.pollInterval = 10000;
+    conn2.bulk.pollTimeout = 600000;
+    const am = new AutoMigrator(conn2);
+
     am.on('dumpProgress', status => {
-      this.ux.log(`fetched count: ${status.fetchedCount}, ${JSON.stringify(status.fetchedCountPerObject)}`);
+      const message = `fetched count: ${status.fetchedCount}, ${JSON.stringify(status.fetchedCountPerObject)}`;
+      this.ux.log(message);
     });
+    this.ux.startSpinner('dumping records');
     const csvs = await am.dumpAsCSVData(config.targets);
+    this.ux.stopSpinner();
     const filepaths = await Promise.all(
       config.targets.map(async ({ object }, i) => {
         const csv = csvs[i];

@@ -24,7 +24,8 @@ export default class Load extends SfdxCommand {
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
     inputdir: flags.string({char: 'd', description: messages.getMessage('inputDirFlagDescription'), required: true }),
-    mappingobjects: flags.array({char: 'm', description: messages.getMessage('mappingObjectsFlagDescription')})
+    mappingobjects: flags.array({char: 'm', description: messages.getMessage('mappingObjectsFlagDescription')}),
+    deletebeforeload: flags.boolean({description: messages.getMessage('deleteBeforeLoadFlagDescription')})
   };
 
   // Comment this out if your command does not require an org username
@@ -42,9 +43,13 @@ export default class Load extends SfdxCommand {
       throw new Error('No --inputdir options found, specify directory with CSV files');
     }
 
-    const { accessToken, instanceUrl } = this.org.getConnection();
-    const conn = new Connection({ accessToken, instanceUrl });
-    const am = new AutoMigrator(conn);
+    const conn = this.org.getConnection();
+    await conn.request('/');
+    const { accessToken, instanceUrl } = conn;
+    const conn2 = new Connection({ accessToken, instanceUrl });
+    conn2.bulk.pollInterval = 10000;
+    conn2.bulk.pollTimeout = 600000;
+    const am = new AutoMigrator(conn2);
 
     const filenames = await readdir(inputDir);
     const inputs: UploadInput[] = [];
@@ -57,15 +62,32 @@ export default class Load extends SfdxCommand {
         inputs.push({ object, csvData });
       }
     }
+    if (this.flags.deletebeforeload) {
+      this.ux.startSpinner('deleting existing records');
+      for (let i = 0; i < 3; i++) {
+        await Promise.all(
+          inputs.map(({ object }) => conn2.sobject(object).find().destroy())
+        );
+      }
+      this.ux.stopSpinner();
+    }
     am.on('loadProgress', ({ totalCount, successCount, failureCount }) => {
-      this.ux.log(`total records: ${totalCount}`);
-      this.ux.log(`successes: ${successCount}`);
-      this.ux.log(`failures: ${failureCount}`);
+      const message = `total loading records: ${totalCount} (successes: ${successCount}, failures: ${failureCount})`;
+      this.ux.setSpinnerStatus(message);
     });
+    this.ux.startSpinner('loading records');
     const status = await am.loadCSVData(inputs);
+    this.ux.stopSpinner();
     this.ux.log(`total records: ${status.totalCount}`);
     this.ux.log(`successes: ${status.successes.length}`);
     this.ux.log(`failures: ${status.failures.length}`);
+    for (const failure of status.failures) {
+      this.ux.log(`${failure.object}:${failure.origId}: `);
+      this.ux.log(failure.record);
+      for (const error of failure.errors) {
+        this.ux.log(`   - ${error.message}`);
+      }
+    }
     return status;
   }
 }

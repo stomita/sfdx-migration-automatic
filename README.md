@@ -31,7 +31,7 @@ USAGE
 <!-- usagestop -->
 <!-- commands -->
 * [`sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---f-string--o-array--d-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---d-string--m-array--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [--deletebeforeload] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---d-string--m-array---deletebeforeload--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
 
 ## `sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
@@ -59,20 +59,21 @@ EXAMPLES
 
 _See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.1.1/src/commands/automig/dump.ts)_
 
-## `sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [--deletebeforeload] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Load data from CSV files in directory to Salesforce org to CSV files
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:load -d <string> [-m <array>] [-u <string>] [--apiversion <string>] [--json] 
-  [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:load -d <string> [-m <array>] [--deletebeforeload] [-u <string>] [--apiversion 
+  <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --inputdir=inputdir                         (required) directory of loading CSV files
   -m, --mappingobjects=mappingobjects             list of object and key field pair to map to existing records
   -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
   --apiversion=apiversion                         override the api version used for api requests made by this command
+  --deletebeforeload                              Delete all records in target object before loading
   --json                                          format output as json
   --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
 
