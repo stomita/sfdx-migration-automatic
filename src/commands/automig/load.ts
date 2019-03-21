@@ -62,11 +62,18 @@ export default class Load extends SfdxCommand {
         inputs.push({ object, csvData });
       }
     }
+    const mappingPolicies =
+      (this.flags.mappingobjects || []).map((name) => {
+        const [object,keyField] = name.split(':');
+        return { object, keyField };
+      });
     if (this.flags.deletebeforeload) {
       this.ux.startSpinner('deleting existing records');
       for (let i = 0; i < 3; i++) {
         await Promise.all(
-          inputs.map(({ object }) => conn2.sobject(object).find().destroy())
+          inputs.filter(({ object }) =>
+            !mappingPolicies.find((mapping) => mapping.object === object)
+          ).map(({ object }) => conn2.sobject(object).find().destroy())
         );
       }
       this.ux.stopSpinner();
@@ -76,7 +83,7 @@ export default class Load extends SfdxCommand {
       this.ux.setSpinnerStatus(message);
     });
     this.ux.startSpinner('loading records');
-    const status = await am.loadCSVData(inputs);
+    const status = await am.loadCSVData(inputs, mappingPolicies);
     this.ux.stopSpinner();
     this.ux.log(`total records: ${status.totalCount}`);
     this.ux.log(`successes: ${status.successes.length}`);
