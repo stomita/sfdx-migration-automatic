@@ -1,4 +1,5 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
+import { fs } from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
 import {readFile, writeFile} from 'fs-extra';
 import {Connection} from 'jsforce';
@@ -16,6 +17,10 @@ export default class Dump extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
 
+  public static get usage() {
+    return SfdxCommand.usage.replace('<%= command.id %>', 'automig:dump');
+  }
+
   public static examples = [
   '$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump',
   '$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json'
@@ -23,9 +28,22 @@ export default class Dump extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    config: flags.string({char: 'f', description: messages.getMessage('configFlagDescription')}),
-    objects: flags.array({char: 'o', description: messages.getMessage('objectsFlagDescription')}),
-    outputdir: flags.string({char: 'd', description: messages.getMessage('outputDirFlagDescription')})
+    config: flags.filepath({
+      char: 'f',
+      description: messages.getMessage('configFlagDescription')
+    }),
+    objects: flags.array({
+      char: 'o',
+      description: messages.getMessage('objectsFlagDescription'),
+      map: (value: string) => {
+        const [ object, target = 'query' ] = value.split(':');
+        return { object, target };
+      }
+    }),
+    outputdir: flags.directory({
+      char: 'd',
+      description: messages.getMessage('outputDirFlagDescription')
+    })
   };
 
   // Comment this out if your command does not require an org username
@@ -59,10 +77,7 @@ export default class Dump extends SfdxCommand {
     } else if (this.flags.objects) {
       config = {
         outputDir: this.flags.outputdir || '.',
-        targets: this.flags.objects.map((o: string) => {
-          const [object, target = 'query'] = o.split(':');
-          return { object, target };
-        })
+        targets: this.flags.objects
       };
     } else {
       throw new Error('No --config or --objects options are supplied to command arg');
@@ -71,28 +86,52 @@ export default class Dump extends SfdxCommand {
     const conn = this.org.getConnection();
     await conn.request('/');
     const { accessToken, instanceUrl } = conn;
-    const conn2 = new Connection({ accessToken, instanceUrl });
+    const conn2 = new Connection({ accessToken, instanceUrl, version: this.flags.apiversion });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
     const am = new AutoMigrator(conn2);
 
+    let fetchedCount = 0;
+    let fetchedCountPerObject = {};
     am.on('dumpProgress', status => {
-      const message = `fetched count: ${status.fetchedCount}, ${JSON.stringify(status.fetchedCountPerObject)}`;
-      this.ux.log(message);
+      fetchedCount = status.fetchedCount;
+      fetchedCountPerObject = status.fetchedCountPerObject;
+      const perObjectCount = Object.keys(fetchedCountPerObject).map(object => `${object}: ${fetchedCountPerObject[object]}`).join(', ');
+      const message = `fetched count: ${fetchedCount}, ${perObjectCount}`;
+      this.ux.setSpinnerStatus(message);
     });
     this.ux.startSpinner('dumping records');
     const csvs = await am.dumpAsCSVData(config.targets);
     this.ux.stopSpinner();
-    const filepaths = await Promise.all(
+    this.ux.log(`fetched count: ${fetchedCount}`);
+    try {
+      await fs.stat(config.outputDir);
+    } catch (e) {
+      await fs.mkdirp(config.outputDir);
+    }
+    const results = await Promise.all(
       config.targets.map(async ({ object }, i) => {
         const csv = csvs[i];
+        const count = fetchedCountPerObject[object] || 0;
         const filename = `${object}.csv`;
         const filepath = path.join(config.outputDir, filename);
         await writeFile(filepath, csv, 'utf8');
-        return filepath;
+        return { filepath, count };
       })
     );
-    this.ux.log(filepaths.join('\n'));
-    return { filepaths };
+    this.ux.log();
+    this.ux.table(
+      results,
+      {
+        columns: [{
+          key: 'filepath',
+          label: 'Output File Path'
+        }, {
+          key: 'count',
+          label: 'Count'
+        }]
+      }
+    );
+    return { fetchedCount, results };
   }
 }

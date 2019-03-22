@@ -32,6 +32,15 @@ describe('automig:dump', () => {
     .stub(fs, 'writeFile', function writeFileStub(filepath, data) {
       files[filepath] = data;
     })
+    .stub(fs, 'stat', function readFileStub(filepath) {
+      if (!files[filepath]) {
+        throw new Error();
+      }
+      return {};
+    })
+    .stub(fs, 'mkdirp', function readFileStub(filepath) {
+      return;
+    })
     .stdout();
   
   /**

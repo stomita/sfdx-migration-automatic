@@ -3,7 +3,7 @@ import {AnyJson} from '@salesforce/ts-types';
 import {readdir, readFile} from 'fs-extra';
 import {Connection} from 'jsforce';
 import * as path from 'path';
-import {AutoMigrator, UploadInput} from 'salesforce-migration-automatic';
+import {AutoMigrator, RecordMappingPolicy, UploadInput} from 'salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -16,6 +16,10 @@ export default class Load extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
 
+  public static get usage() {
+    return SfdxCommand.usage.replace('<%= command.id %>', 'automig:load');
+  }
+
   public static examples = [
   '$ sfdx automig:load --targetusername username@example.com --dir ./data',
   '$ sfdx automig:load --targetusername username@example.com --dir ./data --mappingobjects User:Email,RecordType:DeveloperName'
@@ -23,9 +27,23 @@ export default class Load extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    inputdir: flags.string({char: 'd', description: messages.getMessage('inputDirFlagDescription'), required: true }),
-    mappingobjects: flags.array({char: 'm', description: messages.getMessage('mappingObjectsFlagDescription')}),
-    deletebeforeload: flags.boolean({description: messages.getMessage('deleteBeforeLoadFlagDescription')})
+    inputdir: flags.directory({
+      char: 'd',
+      description: messages.getMessage('inputDirFlagDescription'),
+      required: true
+    }),
+    mappingobjects: flags.array({
+      char: 'm',
+      description: messages.getMessage('mappingObjectsFlagDescription'),
+      map: (value: string) => {
+        const [ object, keyField = 'Name' ] = value.split(':');
+        return { object, keyField };
+      }
+    }),
+    deletebeforeload: flags.boolean({
+      description: messages.getMessage('deleteBeforeLoadFlagDescription')
+    }),
+    verbose: flags.builtin()
   };
 
   // Comment this out if your command does not require an org username
@@ -37,6 +55,9 @@ export default class Load extends SfdxCommand {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
 
+  /**
+   *
+   */
   public async run(): Promise<AnyJson> {
     const inputDir = this.flags.inputdir;
     if (!inputDir) {
@@ -46,7 +67,7 @@ export default class Load extends SfdxCommand {
     const conn = this.org.getConnection();
     await conn.request('/');
     const { accessToken, instanceUrl } = conn;
-    const conn2 = new Connection({ accessToken, instanceUrl });
+    const conn2 = new Connection({ accessToken, instanceUrl, version: this.flags.apiversion });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
     const am = new AutoMigrator(conn2);
@@ -62,13 +83,9 @@ export default class Load extends SfdxCommand {
         inputs.push({ object, csvData });
       }
     }
-    const mappingPolicies =
-      (this.flags.mappingobjects || []).map(name => {
-        const [object, keyField] = name.split(':');
-        return { object, keyField };
-      });
+    const mappingPolicies: RecordMappingPolicy[] = this.flags.mappingobjects || [];
     if (this.flags.deletebeforeload) {
-      this.ux.startSpinner('deleting existing records');
+      this.ux.startSpinner('Deleting existing records');
       for (let i = 0; i < 3; i++) {
         await Promise.all(
           inputs.filter(({ object }) =>
@@ -78,22 +95,74 @@ export default class Load extends SfdxCommand {
       }
       this.ux.stopSpinner();
     }
+    let loading = false;
     am.on('loadProgress', ({ totalCount, successCount, failureCount }) => {
-      const message = `total loading records: ${totalCount} (successes: ${successCount}, failures: ${failureCount})`;
+      const message = `successes: ${successCount}, failures: ${failureCount}`;
       this.ux.setSpinnerStatus(message);
+      if (!loading) {
+        this.ux.log(`Total records in input: ${totalCount}`);
+        loading = true;
+      }
     });
-    this.ux.startSpinner('loading records');
+    this.ux.startSpinner('Loading records');
     const status = await am.loadCSVData(inputs, mappingPolicies);
     this.ux.stopSpinner();
-    this.ux.log(`total records: ${status.totalCount}`);
-    this.ux.log(`successes: ${status.successes.length}`);
-    this.ux.log(`failures: ${status.failures.length}`);
-    for (const failure of status.failures) {
-      this.ux.log(`${failure.object}:${failure.origId}: `);
-      this.ux.log(failure.record);
-      for (const error of failure.errors) {
-        this.ux.log(`   - ${error.message}`);
+    this.ux.log();
+    this.ux.log(`Successes: ${status.successes.length}`);
+    this.ux.log(`Failures: ${status.failures.length}`);
+    this.logger.debug('successes =>');
+    for (const success of status.successes) {
+      this.logger.debug(success.object, success.origId, success.newId);
+    }
+    if (this.flags.verbose) {
+      this.ux.log();
+      this.ux.log('Success Results:');
+      this.ux.log();
+      this.ux.table(
+        status.successes,
+        {
+          columns: [{
+            key: 'object',
+            label: 'Object'
+          }, {
+            key: 'origId',
+            label: 'Original ID'
+          }, {
+            key: 'newId',
+            label: 'New ID'
+          }]
+        }
+      );
+    }
+    if (status.failures.length > 0) {
+      this.logger.debug('failures =>');
+      for (const failure of status.failures) {
+        this.logger.debug(failure.object, failure.origId, failure.record, failure.errors.map(e => e.message));
       }
+      this.ux.log();
+      this.ux.log('Failure Results:');
+      this.ux.log();
+      this.ux.table(
+        status.failures.map(failure => {
+          return {
+            object: failure.object,
+            origId: failure.origId,
+            error: failure.errors.map(e => e.message).join('\n')
+          };
+        }),
+        {
+          columns: [{
+            key: 'object',
+            label: 'Object'
+          }, {
+            key: 'origId',
+            label: 'Original ID'
+          }, {
+            key: 'error',
+            label: 'Error Message'
+          }]
+        }
+      );
     }
     return status;
   }

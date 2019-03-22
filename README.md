@@ -13,7 +13,7 @@ sfdx-migration-automatic
 [![License](https://img.shields.io/npm/l/sfdx-migration-automatic.svg)](https://github.com/stomita/sfdx-migration-automatic/blob/master/package.json)
 
 <!-- toc -->
-* [Debugging your plugin](#debugging-your-plugin)
+
 <!-- tocstop -->
 <!-- install -->
 <!-- usage -->
@@ -30,25 +30,30 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---f-string--o-array--d-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [--deletebeforeload] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic--commandid---d-string--m-array---deletebeforeload--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx-migration-automatic <%= command.id %> [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
-Dump data in Salesforce org to CSV files, for migration usage
+Dump records in Salesforce org to CSV files for migration usage
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:dump [-f <string>] [-o <array>] [-d <string>] [-u <string>] [--apiversion <string>] 
-  [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
-  -d, --outputdir=outputdir                       output directory of dumped CSV files
+  -d, --outputdir=outputdir                       output directory for dumped CSV files
   -f, --config=config                             dump configuration file
-  -o, --objects=objects                           objects to dump
+
+  -o, --objects=objects                           object names to dump, optionally paired with target scope (e.g.
+                                                  Account,Contact,User:related)
+
   -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+
   --apiversion=apiversion                         override the api version used for api requests made by this command
+
   --json                                          format output as json
+
   --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
 
 EXAMPLES
@@ -59,23 +64,31 @@ EXAMPLES
 
 _See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.2.1/src/commands/automig/dump.ts)_
 
-## `sfdx-migration-automatic <%= command.id %> -d <string> [-m <array>] [--deletebeforeload] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
-Load data from CSV files in directory to Salesforce org to CSV files
+Load records from CSV files to Salesforce org, resolving relationships between records
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:load -d <string> [-m <array>] [--deletebeforeload] [-u <string>] [--apiversion 
-  <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
-  -d, --inputdir=inputdir                         (required) directory of loading CSV files
-  -m, --mappingobjects=mappingobjects             list of object and key field pair to map to existing records
+  -d, --inputdir=inputdir                         (required) directory which includes input data files in CSV
+
+  -m, --mappingobjects=mappingobjects             list of object and key field name pair to map to existing records
+                                                  (e.g. User:Email,RecordType:DeveloperName
+
   -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+
   --apiversion=apiversion                         override the api version used for api requests made by this command
-  --deletebeforeload                              Delete all records in target object before loading
+
+  --deletebeforeload                              Delete all records in target objects before loading
+
   --json                                          format output as json
+
   --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
+
+  --verbose                                       emit additional command output to stdout
 
 EXAMPLES
   $ sfdx automig:load --targetusername username@example.com --dir ./data
@@ -85,27 +98,3 @@ EXAMPLES
 
 _See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.2.1/src/commands/automig/load.ts)_
 <!-- commandsstop -->
-<!-- debugging-your-plugin -->
-# Debugging your plugin
-We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
-
-To debug the `hello:org` command: 
-1. Start the inspector
-  
-If you linked your plugin to the sfdx cli, call your command with the `dev-suspend` switch: 
-```sh-session
-$ sfdx hello:org -u myOrg@example.com --dev-suspend
-```
-  
-Alternatively, to call your command using the `bin/run` script, set the `NODE_OPTIONS` environment variable to `--inspect-brk` when starting the debugger:
-```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run hello:org -u myOrg@example.com
-```
-
-2. Set some breakpoints in your command code
-3. Click on the Debug icon in the Activity Bar on the side of VS Code to open up the Debug view.
-4. In the upper left hand corner of VS Code, verify that the "Attach to Remote" launch configuration has been chosen.
-5. Hit the green play button to the left of the "Attach to Remote" launch configuration window. The debugger should now be suspended on the first line of the program. 
-6. Hit the green play button at the top middle of VS Code (this play button will be to the right of the play button that you clicked in step #5).
-<br><img src=".images/vscodeScreenshot.png" width="480" height="278"><br>
-Congrats, you are debugging!

@@ -1,6 +1,6 @@
 {
-  "commandDescription": "Dump data in Salesforce org to CSV files, for migration usage",
+  "commandDescription": "Dump records in Salesforce org to CSV files for migration usage",
   "configFlagDescription": "dump configuration file",
-  "objectsFlagDescription": "objects to dump",
-  "outputDirFlagDescription": "output directory of dumped CSV files"
+  "objectsFlagDescription": "object names to dump, optionally paired with target scope (e.g. Account,Contact,User:related)",
+  "outputDirFlagDescription": "output directory for dumped CSV files"
 }

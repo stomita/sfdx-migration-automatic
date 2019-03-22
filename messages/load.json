@@ -1,6 +1,6 @@
 {
-  "commandDescription": "Load data from CSV files in directory to Salesforce org to CSV files",
-  "inputDirFlagDescription": "directory of loading CSV files",
-  "mappingObjectsFlagDescription": "list of object and key field pair to map to existing records",
-  "deleteBeforeLoadFlagDescription": "Delete all records in target object before loading"
+  "commandDescription": "Load records from CSV files to Salesforce org, resolving relationships between records",
+  "inputDirFlagDescription": "directory which includes input data files in CSV",
+  "mappingObjectsFlagDescription": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
+  "deleteBeforeLoadFlagDescription": "delete all records in target objects before loading"
 }
