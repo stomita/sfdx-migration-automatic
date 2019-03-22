@@ -39,4 +39,13 @@ describe('automig:load', () => {
     .it('runs automig:load --inputdir path/to/csv', ctx => {
       expect(ctx.stdout).includes('total records: 0');
     })
+
+  /**
+   * 
+   */
+  ts.command(['automig:load', '--inputdir', 'path/to/csv', '--mappingobjects', 'User:Email,RecordType:DeveloperName'])
+    .it('runs automig:load --inputdir path/to/csv --mappingobjects User:Email,RecordType:DeveloperName', ctx => {
+      expect(ctx.stdout).includes('total records: 0');
+    })
+
 });
