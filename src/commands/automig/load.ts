@@ -63,8 +63,8 @@ export default class Load extends SfdxCommand {
       }
     }
     const mappingPolicies =
-      (this.flags.mappingobjects || []).map((name) => {
-        const [object,keyField] = name.split(':');
+      (this.flags.mappingobjects || []).map(name => {
+        const [object, keyField] = name.split(':');
         return { object, keyField };
       });
     if (this.flags.deletebeforeload) {
@@ -72,7 +72,7 @@ export default class Load extends SfdxCommand {
       for (let i = 0; i < 3; i++) {
         await Promise.all(
           inputs.filter(({ object }) =>
-            !mappingPolicies.find((mapping) => mapping.object === object)
+            !mappingPolicies.find(mapping => mapping.object === object)
           ).map(({ object }) => conn2.sobject(object).find().destroy())
         );
       }
