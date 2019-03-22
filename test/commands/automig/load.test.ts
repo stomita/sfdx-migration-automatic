@@ -11,7 +11,11 @@ describe('automig:load', () => {
     .withOrg({ username: 'test@example.org' }, true)
     .stub(automig, 'AutoMigrator', class AutoMigratorStub extends EventEmitter {
       async loadCSVData(inputs) {
-        return { totalCount: 0, successes: [], failures: [] };
+        return {
+          totalCount: 0,
+          successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
+          failures: [],
+        };
       }
     })
     .stub(fs, 'readdir', function readdirStub(dirpath) {
@@ -37,7 +41,7 @@ describe('automig:load', () => {
    */
   ts.command(['automig:load', '--inputdir', 'path/to/csv'])
     .it('runs automig:load --inputdir path/to/csv', ctx => {
-      expect(ctx.stdout).includes('total records: 0');
+      expect(ctx.stdout).includes('Successes: 1');
     })
 
   /**
@@ -45,7 +49,7 @@ describe('automig:load', () => {
    */
   ts.command(['automig:load', '--inputdir', 'path/to/csv', '--mappingobjects', 'User:Email,RecordType:DeveloperName'])
     .it('runs automig:load --inputdir path/to/csv --mappingobjects User:Email,RecordType:DeveloperName', ctx => {
-      expect(ctx.stdout).includes('total records: 0');
+      expect(ctx.stdout).includes('Successes: 1');
     })
 
 });
