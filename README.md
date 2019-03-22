@@ -91,8 +91,8 @@ OPTIONS
   --verbose                                       emit additional command output to stdout
 
 EXAMPLES
-  $ sfdx automig:load --targetusername username@example.com --dir ./data
-  $ sfdx automig:load --targetusername username@example.com --dir ./data --mappingobjects 
+  $ sfdx automig:load --targetusername username@example.com --inputdir ./data
+  $ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects 
   User:Email,RecordType:DeveloperName
 ```
 

@@ -21,8 +21,8 @@ export default class Load extends SfdxCommand {
   }
 
   public static examples = [
-  '$ sfdx automig:load --targetusername username@example.com --dir ./data',
-  '$ sfdx automig:load --targetusername username@example.com --dir ./data --mappingobjects User:Email,RecordType:DeveloperName'
+  '$ sfdx automig:load --targetusername username@example.com --inputdir ./data',
+  '$ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName'
   ];
 
   protected static flagsConfig = {
