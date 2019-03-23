@@ -2892,10 +2892,10 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-salesforce-migration-automatic@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/salesforce-migration-automatic/-/salesforce-migration-automatic-1.6.2.tgz#84a466b67beafd95292277bb7dbd3fba6002cb13"
-  integrity sha512-cd2/SWUVtFimx8ZBIi9troLS5+mwG/vUaWcpx7K+KArd9vz2JNLqKVJIyY8hkaLr8e86nJtyQum5kSznzWnBpA==
+salesforce-migration-automatic@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/salesforce-migration-automatic/-/salesforce-migration-automatic-1.6.3.tgz#bf37d3f0a341d708258780866c459c5977f84ff6"
+  integrity sha512-MR2Er1OmiQx0GGNFJkSTNkLqNpCjspnQXox2L+W7FkV6Nk41YVWWtBfkRqavRF/wb2qGqH5dpUYGxs7QLtf04Q==
   dependencies:
     csv-parse "^4.3.3"
     csv-stringify "^5.3.0"
