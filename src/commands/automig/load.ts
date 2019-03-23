@@ -5,6 +5,13 @@ import {Connection} from 'jsforce';
 import * as path from 'path';
 import {AutoMigrator, RecordMappingPolicy, UploadInput} from 'salesforce-migration-automatic';
 
+/**
+ * 
+ */
+function removeNamespace(identifier: string) {
+  return identifier.replace(/^[a-zA-Z][a-zA-Z0-9]+__/, "");
+}
+
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
 
@@ -89,11 +96,19 @@ export default class Load extends SfdxCommand {
     const mappingPolicies: RecordMappingPolicy[] = this.flags.mappingobjects || [];
     if (this.flags.deletebeforeload) {
       this.ux.startSpinner('Deleting existing records');
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 5; i++) {
         await Promise.all(
           inputs.filter(({ object }) =>
             !mappingPolicies.find(mapping => mapping.object === object)
-          ).map(({ object }) => conn2.sobject(object).find().destroy())
+          ).map(async ({ object }) => {
+            await conn2.sobject(object).find({}, 'Id').destroy().catch((err) => {
+              const object2 = removeNamespace(object);
+              if (object2 !== object) {
+                return conn2.sobject(object2).find({}, 'Id').destroy();
+              }
+              throw err;
+            })
+          })
         );
       }
       this.ux.stopSpinner();
