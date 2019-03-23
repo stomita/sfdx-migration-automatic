@@ -22,7 +22,7 @@ $ npm install -g sfdx-migration-automatic
 $ sfdx-migration-automatic COMMAND
 running command...
 $ sfdx-migration-automatic (-v|--version|version)
-sfdx-migration-automatic/1.4.0 darwin-x64 node-v8.14.0
+sfdx-migration-automatic/1.4.1 darwin-x64 node-v8.14.0
 $ sfdx-migration-automatic --help [COMMAND]
 USAGE
   $ sfdx-migration-automatic COMMAND
@@ -64,7 +64,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.0/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.1/src/commands/automig/dump.ts)_
 
 ## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
@@ -98,5 +98,5 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.0/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.1/src/commands/automig/load.ts)_
 <!-- commandsstop -->
