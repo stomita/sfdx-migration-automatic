@@ -2,5 +2,6 @@
   "commandDescription": "Dump records in Salesforce org to CSV files for migration usage",
   "configFlagDescription": "dump configuration file",
   "objectsFlagDescription": "object names to dump, optionally paired with target scope (e.g. Account,Contact,User:related)",
-  "outputDirFlagDescription": "output directory for dumped CSV files"
+  "outputDirFlagDescription": "output directory for dumped CSV files",
+  "excludeBomFlagDescription": "do not prepend byte order mark (\\ufeff) in output files"
 }

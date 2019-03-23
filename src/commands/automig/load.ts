@@ -79,7 +79,10 @@ export default class Load extends SfdxCommand {
       if (ext === '.csv') {
         const object = filename.substring(0, filename.length - ext.length);
         const filepath = path.join(inputDir, filename);
-        const csvData = await readFile(filepath, 'utf8');
+        let csvData = await readFile(filepath, 'utf8');
+        if (csvData[0] === '\ufeff') { // Byte order mark
+          csvData = csvData.substring(1);
+        }
         inputs.push({ object, csvData });
       }
     }

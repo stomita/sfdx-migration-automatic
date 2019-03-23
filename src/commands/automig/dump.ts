@@ -43,7 +43,10 @@ export default class Dump extends SfdxCommand {
     outputdir: flags.directory({
       char: 'd',
       description: messages.getMessage('outputDirFlagDescription')
-    })
+    }),
+    excludebom: flags.boolean({
+      description: messages.getMessage('excludeBomFlagDescription')
+    }),
   };
 
   // Comment this out if your command does not require an org username
@@ -115,7 +118,8 @@ export default class Dump extends SfdxCommand {
         const count = fetchedCountPerObject[object] || 0;
         const filename = `${object}.csv`;
         const filepath = path.join(config.outputDir, filename);
-        await writeFile(filepath, csv, 'utf8');
+        const bom = this.flags.excludebom ? '' : '\ufeff';
+        await writeFile(filepath, bom + csv, 'utf8');
         return { filepath, count };
       })
     );
