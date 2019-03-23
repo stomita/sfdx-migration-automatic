@@ -46,7 +46,7 @@ export default class Dump extends SfdxCommand {
     }),
     excludebom: flags.boolean({
       description: messages.getMessage('excludeBomFlagDescription')
-    }),
+    })
   };
 
   // Comment this out if your command does not require an org username
