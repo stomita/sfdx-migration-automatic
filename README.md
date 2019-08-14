@@ -31,8 +31,8 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
 ## `sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
