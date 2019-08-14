@@ -1,6 +1,7 @@
 sfdx-migration-automatic
 ========================
 
+SFDX plugin to dump/load record data to/from CSV files to easily migrate data between orgs
 
 
 [![Version](https://img.shields.io/npm/v/sfdx-migration-automatic.svg)](https://npmjs.org/package/sfdx-migration-automatic)
