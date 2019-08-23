@@ -1,0 +1,13 @@
+{
+    "outputDir": "./dump-tmp",
+    "targets": [
+        {
+            "target": "query",
+            "object": "Account",
+            "fields": ["Name"],
+            "condition": "IsPartner=true",
+            "orderby": "CreatedDate",
+            "limit": 50000
+        }
+    ]
+}
