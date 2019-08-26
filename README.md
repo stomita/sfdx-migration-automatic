@@ -1,6 +1,7 @@
 sfdx-migration-automatic
 ========================
 
+SFDX plugin to dump/load record data to/from CSV files to easily migrate data between orgs
 
 
 [![Version](https://img.shields.io/npm/v/sfdx-migration-automatic.svg)](https://npmjs.org/package/sfdx-migration-automatic)
@@ -30,16 +31,16 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Dump records in Salesforce org to CSV files for migration usage
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --outputdir=outputdir                       output directory for dumped CSV files
@@ -66,13 +67,13 @@ EXAMPLES
 
 _See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.2/src/commands/automig/dump.ts)_
 
-## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Load records from CSV files to Salesforce org, resolving relationships between records
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --inputdir=inputdir                         (required) directory which includes input data files in CSV
