@@ -23,7 +23,7 @@ $ npm install -g sfdx-migration-automatic
 $ sfdx-migration-automatic COMMAND
 running command...
 $ sfdx-migration-automatic (-v|--version|version)
-sfdx-migration-automatic/1.4.2 darwin-x64 node-v8.14.0
+sfdx-migration-automatic/1.5.0 darwin-x64 node-v8.14.0
 $ sfdx-migration-automatic --help [COMMAND]
 USAGE
   $ sfdx-migration-automatic COMMAND
@@ -31,16 +31,16 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Dump records in Salesforce org to CSV files for migration usage
 
 ```
 USAGE
-  $ sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --outputdir=outputdir                       output directory for dumped CSV files
@@ -65,15 +65,15 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.2/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.5.0/src/commands/automig/dump.ts)_
 
-## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Load records from CSV files to Salesforce org, resolving relationships between records
 
 ```
 USAGE
-  $ sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --inputdir=inputdir                         (required) directory which includes input data files in CSV
@@ -99,5 +99,5 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.4.2/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.5.0/src/commands/automig/load.ts)_
 <!-- commandsstop -->
