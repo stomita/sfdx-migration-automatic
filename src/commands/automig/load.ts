@@ -6,10 +6,10 @@ import * as path from 'path';
 import {AutoMigrator, RecordMappingPolicy, UploadInput} from 'salesforce-migration-automatic';
 
 /**
- * 
+ *
  */
 function removeNamespace(identifier: string) {
-  return identifier.replace(/^[a-zA-Z][a-zA-Z0-9]+__/, "");
+  return identifier.replace(/^[a-zA-Z][a-zA-Z0-9]+__/, '');
 }
 
 // Initialize Messages with the current plugin directory
@@ -101,13 +101,13 @@ export default class Load extends SfdxCommand {
           inputs.filter(({ object }) =>
             !mappingPolicies.find(mapping => mapping.object === object)
           ).map(async ({ object }) => {
-            await conn2.sobject(object).find({}, 'Id').destroy().catch((err) => {
+            await conn2.sobject(object).find({}, 'Id').destroy().catch(err => {
               const object2 = removeNamespace(object);
               if (object2 !== object) {
                 return conn2.sobject(object2).find({}, 'Id').destroy();
               }
               throw err;
-            })
+            });
           })
         );
       }
@@ -178,6 +178,33 @@ export default class Load extends SfdxCommand {
           }, {
             key: 'error',
             label: 'Error Message'
+          }]
+        }
+      );
+    }
+    if (status.blocked.length > 0) {
+      this.logger.debug('failures =>');
+      for (const block of status.blocked) {
+        this.logger.debug(block.object, block.origId, block.blockingField, block.blockingId);
+      }
+      this.ux.log();
+      this.ux.log('Blocked Inputs:');
+      this.ux.log();
+      this.ux.table(
+        status.blocked,
+        {
+          columns: [{
+            key: 'object',
+            label: 'Object'
+          }, {
+            key: 'origId',
+            label: 'Original ID'
+          }, {
+            key: 'blockingField',
+            label: 'Blocking Reference'
+          }, {
+            key: 'blockingId',
+            label: 'Reference ID'
           }]
         }
       );
