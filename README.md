@@ -23,7 +23,7 @@ $ npm install -g sfdx-migration-automatic
 $ sfdx-migration-automatic COMMAND
 running command...
 $ sfdx-migration-automatic (-v|--version|version)
-sfdx-migration-automatic/1.3.0 darwin-x64 node-v8.14.0
+sfdx-migration-automatic/1.3.0 darwin-x64 node-v10.17.0
 $ sfdx-migration-automatic --help [COMMAND]
 USAGE
   $ sfdx-migration-automatic COMMAND
@@ -31,16 +31,16 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Dump records in Salesforce org to CSV files for migration usage
 
 ```
 USAGE
-  $ sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --outputdir=outputdir                       output directory for dumped CSV files
@@ -52,6 +52,8 @@ OPTIONS
   -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
 
   --apiversion=apiversion                         override the api version used for api requests made by this command
+
+  --excludebom                                    do not prepend byte order mark (\ufeff) in output files
 
   --json                                          format output as json
 
@@ -65,13 +67,13 @@ EXAMPLES
 
 _See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.3.0/src/commands/automig/dump.ts)_
 
-## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
 Load records from CSV files to Salesforce org, resolving relationships between records
 
 ```
 USAGE
-  $ sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
+  $ sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
 
 OPTIONS
   -d, --inputdir=inputdir                         (required) directory which includes input data files in CSV
@@ -82,6 +84,8 @@ OPTIONS
   -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
 
   --apiversion=apiversion                         override the api version used for api requests made by this command
+
+  --concise                                       emit brief command output to stdout
 
   --deletebeforeload                              delete all records in target objects before loading
 
