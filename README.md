@@ -31,5 +31,75 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
+* [`@mshanemc/sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#mshanemcsfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
+* [`@mshanemc/sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#mshanemcsfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
+## `@mshanemc/sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+
+Dump records in Salesforce org to CSV files for migration usage
+
+```
+USAGE
+  $ @mshanemc/sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
+
+OPTIONS
+  -d, --outputdir=outputdir                       output directory for dumped CSV files
+  -f, --config=config                             dump configuration file
+
+  -o, --objects=objects                           object names to dump, optionally paired with target scope (e.g.
+                                                  Account,Contact,User:related)
+
+  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+
+  --apiversion=apiversion                         override the api version used for api requests made by this command
+
+  --excludebom                                    do not prepend byte order mark (\ufeff) in output files
+
+  --json                                          format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
+
+EXAMPLES
+  $ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related 
+  --outputdir ./dump
+  $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
+```
+
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v0.2.0/src/commands/automig/dump.ts)_
+
+## `@mshanemc/sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
+
+Load records from CSV files to Salesforce org, resolving relationships between records
+
+```
+USAGE
+  $ @mshanemc/sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
+
+OPTIONS
+  -d, --inputdir=inputdir                         (required) directory which includes input data files in CSV
+
+  -m, --mappingobjects=mappingobjects             list of object and key field name pair to map to existing records
+                                                  (e.g. User:Email,RecordType:DeveloperName
+
+  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+
+  --apiversion=apiversion                         override the api version used for api requests made by this command
+
+  --concise                                       emit brief command output to stdout
+
+  --deletebeforeload                              delete all records in target objects before loading
+
+  --json                                          format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
+
+  --verbose                                       emit additional command output to stdout
+
+EXAMPLES
+  $ sfdx automig:load --targetusername username@example.com --inputdir ./data
+  $ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects 
+  User:Email,RecordType:DeveloperName
+```
+
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v0.2.0/src/commands/automig/load.ts)_
 <!-- commandsstop -->

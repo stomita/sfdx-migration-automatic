@@ -1,20 +1,22 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import { core, flags, SfdxCommand } from '@salesforce/command';
 import { fs } from '@salesforce/core';
-import {AnyJson} from '@salesforce/ts-types';
-import {readFile, writeFile} from 'fs-extra';
-import {Connection} from 'jsforce';
+import { AnyJson } from '@salesforce/ts-types';
+import { readFile, writeFile } from 'fs-extra';
+import { Connection } from 'jsforce';
 import * as path from 'path';
-import {AutoMigrator, DumpQuery} from 'salesforce-migration-automatic';
+import { AutoMigrator, DumpQuery } from 'salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('sfdx-migration-automatic', 'dump');
+const messages = core.Messages.loadMessages(
+  '@mshanemc/sfdx-migration-automatic',
+  'dump'
+);
 
 export default class Dump extends SfdxCommand {
-
   public static description = messages.getMessage('commandDescription');
 
   public static get usage() {
@@ -22,8 +24,8 @@ export default class Dump extends SfdxCommand {
   }
 
   public static examples = [
-  '$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump',
-  '$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json'
+    '$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump',
+    '$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json'
   ];
 
   protected static flagsConfig = {
@@ -36,7 +38,7 @@ export default class Dump extends SfdxCommand {
       char: 'o',
       description: messages.getMessage('objectsFlagDescription'),
       map: (value: string) => {
-        const [ object, target = 'query' ] = value.split(':');
+        const [object, target = 'query'] = value.split(':');
         return { object, target };
       }
     }),
@@ -83,13 +85,19 @@ export default class Dump extends SfdxCommand {
         targets: this.flags.objects
       };
     } else {
-      throw new Error('No --config or --objects options are supplied to command arg');
+      throw new Error(
+        'No --config or --objects options are supplied to command arg'
+      );
     }
 
     const conn = this.org.getConnection();
     await conn.request('/');
     const { accessToken, instanceUrl } = conn;
-    const conn2 = new Connection({ accessToken, instanceUrl, version: this.flags.apiversion });
+    const conn2 = new Connection({
+      accessToken,
+      instanceUrl,
+      version: this.flags.apiversion
+    });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
     const am = new AutoMigrator(conn2);
@@ -99,7 +107,9 @@ export default class Dump extends SfdxCommand {
     am.on('dumpProgress', status => {
       fetchedCount = status.fetchedCount;
       fetchedCountPerObject = status.fetchedCountPerObject;
-      const perObjectCount = Object.keys(fetchedCountPerObject).map(object => `${object}: ${fetchedCountPerObject[object]}`).join(', ');
+      const perObjectCount = Object.keys(fetchedCountPerObject)
+        .map(object => `${object}: ${fetchedCountPerObject[object]}`)
+        .join(', ');
       const message = `fetched count: ${fetchedCount}, ${perObjectCount}`;
       this.ux.setSpinnerStatus(message);
     });
@@ -124,18 +134,18 @@ export default class Dump extends SfdxCommand {
       })
     );
     this.ux.log();
-    this.ux.table(
-      results,
-      {
-        columns: [{
+    this.ux.table(results, {
+      columns: [
+        {
           key: 'filepath',
           label: 'Output File Path'
-        }, {
+        },
+        {
           key: 'count',
           label: 'Count'
-        }]
-      }
-    );
+        }
+      ]
+    });
     return { fetchedCount, results };
   }
 }

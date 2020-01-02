@@ -1,5 +1,5 @@
 {
-  "name": "sfdx-migration-automatic",
+  "name": "@mshanemc/sfdx-migration-automatic",
   "version": "0.2.0",
   "lockfileVersion": 1,
   "requires": true,
