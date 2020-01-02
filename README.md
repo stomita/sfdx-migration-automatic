@@ -19,87 +19,17 @@ SFDX plugin to dump/load record data to/from CSV files to easily migrate data be
 <!-- install -->
 <!-- usage -->
 ```sh-session
-$ npm install -g sfdx-migration-automatic
-$ sfdx-migration-automatic COMMAND
+$ npm install -g @mshanemc/sfdx-migration-automatic
+$ @mshanemc/sfdx-migration-automatic COMMAND
 running command...
-$ sfdx-migration-automatic (-v|--version|version)
-sfdx-migration-automatic/1.3.0 darwin-x64 node-v10.17.0
-$ sfdx-migration-automatic --help [COMMAND]
+$ @mshanemc/sfdx-migration-automatic (-v|--version|version)
+@mshanemc/sfdx-migration-automatic/0.2.0 darwin-x64 node-v12.14.0
+$ @mshanemc/sfdx-migration-automatic --help [COMMAND]
 USAGE
-  $ sfdx-migration-automatic COMMAND
+  $ @mshanemc/sfdx-migration-automatic COMMAND
 ...
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfatal)
-* [`sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfatal)
 
-## `sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]`
-
-Dump records in Salesforce org to CSV files for migration usage
-
-```
-USAGE
-  $ sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal]
-
-OPTIONS
-  -d, --outputdir=outputdir                       output directory for dumped CSV files
-  -f, --config=config                             dump configuration file
-
-  -o, --objects=objects                           object names to dump, optionally paired with target scope (e.g.
-                                                  Account,Contact,User:related)
-
-  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
-
-  --apiversion=apiversion                         override the api version used for api requests made by this command
-
-  --excludebom                                    do not prepend byte order mark (\ufeff) in output files
-
-  --json                                          format output as json
-
-  --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
-
-EXAMPLES
-  $ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related 
-  --outputdir ./dump
-  $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
-```
-
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.3.0/src/commands/automig/dump.ts)_
-
-## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
-
-Load records from CSV files to Salesforce org, resolving relationships between records
-
-```
-USAGE
-  $ sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]
-
-OPTIONS
-  -d, --inputdir=inputdir                         (required) directory which includes input data files in CSV
-
-  -m, --mappingobjects=mappingobjects             list of object and key field name pair to map to existing records
-                                                  (e.g. User:Email,RecordType:DeveloperName
-
-  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
-
-  --apiversion=apiversion                         override the api version used for api requests made by this command
-
-  --concise                                       emit brief command output to stdout
-
-  --deletebeforeload                              delete all records in target objects before loading
-
-  --json                                          format output as json
-
-  --loglevel=(trace|debug|info|warn|error|fatal)  [default: warn] logging level for this command invocation
-
-  --verbose                                       emit additional command output to stdout
-
-EXAMPLES
-  $ sfdx automig:load --targetusername username@example.com --inputdir ./data
-  $ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects 
-  User:Email,RecordType:DeveloperName
-```
-
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v1.3.0/src/commands/automig/load.ts)_
 <!-- commandsstop -->
