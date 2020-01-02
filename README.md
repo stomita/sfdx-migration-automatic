@@ -23,7 +23,7 @@ $ npm install -g @mshanemc/sfdx-migration-automatic
 $ @mshanemc/sfdx-migration-automatic COMMAND
 running command...
 $ @mshanemc/sfdx-migration-automatic (-v|--version|version)
-@mshanemc/sfdx-migration-automatic/0.2.0 darwin-x64 node-v12.14.0
+@mshanemc/sfdx-migration-automatic/0.2.1 darwin-x64 node-v12.14.0
 $ @mshanemc/sfdx-migration-automatic --help [COMMAND]
 USAGE
   $ @mshanemc/sfdx-migration-automatic COMMAND
@@ -65,7 +65,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v0.2.0/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v0.2.1/src/commands/automig/dump.ts)_
 
 ## `@mshanemc/sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal]`
 
@@ -101,5 +101,5 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v0.2.0/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v0.2.1/src/commands/automig/load.ts)_
 <!-- commandsstop -->
