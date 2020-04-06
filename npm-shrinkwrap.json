@@ -3867,21 +3867,49 @@
       "version": "2.1.2"
     },
     "salesforce-migration-automatic": {
-      "version": "1.6.0",
+      "version": "1.8.0",
       "requires": {
-        "csv-parse": "^4.3.3",
-        "csv-stringify": "^5.3.0",
-        "jsforce": "^1.9.1"
+        "csv-parse": "^4.8.2",
+        "csv-stringify": "^5.3.3",
+        "jsforce": "^1.9.3"
       },
       "dependencies": {
         "csv-parse": {
-          "version": "4.3.4"
+          "version": "4.8.8"
         },
         "csv-stringify": {
-          "version": "5.3.0",
+          "version": "5.3.6"
+        },
+        "jsforce": {
+          "version": "1.9.3",
           "requires": {
-            "lodash.get": "~4.4.2"
+            "base64-url": "^2.2.0",
+            "co-prompt": "^1.0.0",
+            "coffeescript": "^1.10.0",
+            "commander": "^2.9.0",
+            "csv-parse": "^4.6.3",
+            "csv-stringify": "^1.0.4",
+            "faye": "^1.2.0",
+            "inherits": "^2.0.1",
+            "lodash": "^4.17.14",
+            "multistream": "^2.0.5",
+            "opn": "^5.3.0",
+            "promise": "^7.1.1",
+            "readable-stream": "^2.1.0",
+            "request": "^2.72.0",
+            "xml2js": "^0.4.16"
+          },
+          "dependencies": {
+            "csv-stringify": {
+              "version": "1.1.2",
+              "requires": {
+                "lodash.get": "~4.4.2"
+              }
+            }
           }
+        },
+        "lodash": {
+          "version": "4.17.15"
         }
       }
     },

@@ -6,8 +6,8 @@ import * as path from 'path';
 import {
   AutoMigrator,
   RecordMappingPolicy,
-  UploadInput
-} from 'salesforce-migration-automatic';
+  UploadInput,
+} from '../../../salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -28,7 +28,7 @@ export default class Load extends SfdxCommand {
 
   public static examples = [
     '$ sfdx automig:load --targetusername username@example.com --inputdir ./data',
-    '$ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName'
+    '$ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName',
   ];
 
   protected static flagsConfig = {
@@ -36,7 +36,7 @@ export default class Load extends SfdxCommand {
     inputdir: flags.directory({
       char: 'd',
       description: messages.getMessage('inputDirFlagDescription'),
-      required: true
+      required: true,
     }),
     mappingobjects: flags.array({
       char: 'm',
@@ -44,13 +44,13 @@ export default class Load extends SfdxCommand {
       map: (value: string) => {
         const [object, keyField = 'Name'] = value.split(':');
         return { object, keyField };
-      }
+      },
     }),
     deletebeforeload: flags.boolean({
-      description: messages.getMessage('deleteBeforeLoadFlagDescription')
+      description: messages.getMessage('deleteBeforeLoadFlagDescription'),
     }),
     verbose: flags.builtin(),
-    concise: flags.builtin()
+    concise: flags.builtin(),
   };
 
   // Comment this out if your command does not require an org username
@@ -79,7 +79,7 @@ export default class Load extends SfdxCommand {
     const conn2 = new Connection({
       accessToken,
       instanceUrl,
-      version: this.flags.apiversion
+      version: this.flags.apiversion,
     });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
@@ -109,14 +109,9 @@ export default class Load extends SfdxCommand {
           inputs
             .filter(
               ({ object }) =>
-                !mappingPolicies.find(mapping => mapping.object === object)
+                !mappingPolicies.find((mapping) => mapping.object === object)
             )
-            .map(({ object }) =>
-              conn2
-                .sobject(object)
-                .find()
-                .destroy()
-            )
+            .map(({ object }) => conn2.sobject(object).find().destroy())
         );
       }
       this.ux.stopSpinner();
@@ -148,17 +143,17 @@ export default class Load extends SfdxCommand {
         columns: [
           {
             key: 'object',
-            label: 'Object'
+            label: 'Object',
           },
           {
             key: 'origId',
-            label: 'Original ID'
+            label: 'Original ID',
           },
           {
             key: 'newId',
-            label: 'New ID'
-          }
-        ]
+            label: 'New ID',
+          },
+        ],
       });
     }
     if (status.failures.length > 0) {
@@ -168,35 +163,35 @@ export default class Load extends SfdxCommand {
           failure.object,
           failure.origId,
           failure.record,
-          failure.errors.map(e => e.message)
+          failure.errors.map((e) => e.message)
         );
       }
       this.ux.log();
       this.ux.log('Failure Results:');
       this.ux.log();
       this.ux.table(
-        status.failures.map(failure => {
+        status.failures.map((failure) => {
           return {
             object: failure.object,
             origId: failure.origId,
-            error: failure.errors.map(e => e.message).join('\n')
+            error: failure.errors.map((e) => e.message).join('\n'),
           };
         }),
         {
           columns: [
             {
               key: 'object',
-              label: 'Object'
+              label: 'Object',
             },
             {
               key: 'origId',
-              label: 'Original ID'
+              label: 'Original ID',
             },
             {
               key: 'error',
-              label: 'Error Message'
-            }
-          ]
+              label: 'Error Message',
+            },
+          ],
         }
       );
     }
@@ -204,7 +199,7 @@ export default class Load extends SfdxCommand {
       return {
         totalCount: status.totalCount,
         successCount: status.successes.length,
-        failures: status.failures
+        failures: status.failures,
       };
     }
     return status;
