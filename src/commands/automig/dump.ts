@@ -4,10 +4,9 @@ import { AnyJson } from '@salesforce/ts-types';
 import { readFile, writeFile } from 'fs-extra';
 import { Connection } from 'jsforce';
 import * as path from 'path';
-import {
-  AutoMigrator,
-  DumpQuery,
-} from '../../../salesforce-migration-automatic';
+import { AutoMigrator } from '../../salesforce-migration-automatic/src/AutoMigrator';
+
+import { DumpQuery } from '../../salesforce-migration-automatic/src/types';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);

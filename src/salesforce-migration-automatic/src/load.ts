@@ -1,13 +1,13 @@
-import { Connection, Record as SFRecord } from "jsforce";
-import parse from "csv-parse";
+import { Connection, Record as SFRecord } from 'jsforce';
 import {
   UploadInput,
   UploadResult,
   UploadStatus,
   UploadProgress,
-  RecordMappingPolicy
-} from "./types";
-import { describeSObjects, Describer } from "./describe";
+  RecordMappingPolicy,
+} from './types';
+import { describeSObjects, Describer } from './describe';
+import parse = require('csv-parse');
 
 type RecordIdPair = {
   id: string;
@@ -37,9 +37,9 @@ function filterUploadableRecords(
     const field = describer.findFieldDescription(object, header);
     if (field) {
       const { type } = field;
-      if (type === "id") {
+      if (type === 'id') {
         idIndex = i;
-      } else if (type === "reference") {
+      } else if (type === 'reference') {
         const { name: fieldName, referenceTo } = field;
         for (const refObject of referenceTo || []) {
           if (describer.findSObjectDescription(refObject)) {
@@ -115,10 +115,10 @@ function convertToRecordIdPair(
     }
     const { name, type, createable } = field;
     switch (type) {
-      case "id":
+      case 'id':
         id = value;
         break;
-      case "int":
+      case 'int':
         {
           const num = parseInt(value);
           if (!isNaN(num) && createable) {
@@ -126,9 +126,9 @@ function convertToRecordIdPair(
           }
         }
         break;
-      case "double":
-      case "currency":
-      case "percent":
+      case 'double':
+      case 'currency':
+      case 'percent':
         {
           const fnum = parseFloat(value);
           if (!isNaN(fnum) && createable) {
@@ -136,18 +136,18 @@ function convertToRecordIdPair(
           }
         }
         break;
-      case "date":
-      case "datetime":
+      case 'date':
+      case 'datetime':
         if (value && createable) {
           record[name] = value;
         }
         break;
-      case "boolean":
+      case 'boolean':
         if (createable) {
           record[name] = !/^(|0|n|f|false)$/i.test(value);
         }
         break;
-      case "reference":
+      case 'reference':
         if (createable) {
           record[name] = idMap[value];
         }
@@ -160,7 +160,7 @@ function convertToRecordIdPair(
     }
   });
   if (!id) {
-    throw new Error(`No id type field is found: ${object}, ${row.join(", ")}`);
+    throw new Error(`No id type field is found: ${object}, ${row.join(', ')}`);
   }
   return { id, record };
 }
@@ -171,8 +171,8 @@ async function uploadRecords(
   idMap: Record<string, string>,
   describer: Describer
 ) {
-  const successes: UploadStatus["successes"] = [];
-  const failures: UploadStatus["failures"] = [];
+  const successes: UploadStatus['successes'] = [];
+  const failures: UploadStatus['failures'] = [];
   for (const [object, recordIdPairs] of Object.entries(uploadings)) {
     const description = describer.findSObjectDescription(object);
     if (!description) {
@@ -220,7 +220,7 @@ async function uploadDatasets(
 ): Promise<UploadResult> {
   // array of sobj and recordId (old) pair
   const uploadings: Record<string, RecordIdPair[]> = {};
-  const blocked: UploadStatus["blocked"] = [];
+  const blocked: UploadStatus['blocked'] = [];
   for (const dataset of datasets) {
     const { uploadables, waitings } = filterUploadableRecords(
       dataset,
@@ -228,7 +228,7 @@ async function uploadDatasets(
       idMap,
       describer
     );
-    const uploadRecordIdPairs = uploadables.map(row =>
+    const uploadRecordIdPairs = uploadables.map((row) =>
       convertToRecordIdPair(dataset, row, idMap, describer)
     );
     if (uploadRecordIdPairs.length > 0) {
@@ -240,7 +240,7 @@ async function uploadDatasets(
         object: dataset.object,
         origId: id,
         blockingField,
-        blockingId
+        blockingId,
       }))
     );
   }
@@ -257,7 +257,7 @@ async function uploadDatasets(
       totalCount,
       successes: [...uploadStatus.successes, ...successes],
       failures: [...uploadStatus.failures, ...failures],
-      blocked
+      blocked,
     };
     const successCount = newUploadStatus.successes.length;
     const failureCount = newUploadStatus.failures.length;
@@ -282,74 +282,111 @@ async function uploadDatasets(
  */
 async function getExistingIdMap(
   conn: Connection,
-  dataset: LoadDataset,
-  keyField: string,
+  dataset: LoadDataset, // RecordType
+  keyField: string, // DeveloperName
   describer: Describer
 ) {
   const { object, headers, rows } = dataset;
-  let idIndex = -1;
-  let keyIndex = -1;
+  let idIndex = -1; // index of the id field on the local table
+  let keyIndex = -1; // index of the keyfield on the local table
   headers.forEach((header, i) => {
     if (header === keyField) {
-      keyIndex = i;
+      keyIndex = i; // DeveloperName => 2
       return;
     }
     const field = describer.findFieldDescription(object, header);
-    if (field && field.type === "id") {
+    if (field && field.type === 'id') {
       idIndex = i;
     }
   });
   if (idIndex < 0 || keyIndex < 0) {
     return {};
   }
-  const keyMap = rows.reduce(
-    (keyMap, row) => {
-      const id = row[idIndex];
-      const keyValue = row[keyIndex];
-      if (id == null || id === "" || keyValue == null || keyValue === "") {
-        return keyMap;
-      }
-      return { ...keyMap, [keyValue]: id };
-    },
-    {} as Record<string, string>
-  );
+  const keyMap = rows.reduce((keyMap, row) => {
+    const id = row[idIndex];
+    const keyValue = row[keyIndex];
+    if (id == null || id === '' || keyValue == null || keyValue === '') {
+      return keyMap;
+    }
+    return { ...keyMap, [keyValue]: id }; // General => recordTypeId
+  }, {} as Record<string, string>);
   const keyValues = Array.from(new Set(Object.keys(keyMap)));
   const records: SFRecord[] =
     keyValues.length === 0
       ? []
       : await conn.sobject(object).find(
           {
-            [keyField]: keyValues
+            [keyField]: keyValues,
           },
-          ["Id", keyField]
+          ['Id', keyField]
         );
-  const newKeyMap = records.reduce(
-    (newKeyMap, record) => {
-      const keyValue: string = record[keyField];
-      if (keyValue == null) {
-        return newKeyMap;
-      }
-      return {
-        ...newKeyMap,
-        [keyValue]: record.Id as string
-      };
-    },
-    {} as Record<string, string>
+  const newKeyMap = records.reduce((newKeyMap, record) => {
+    const keyValue: string = record[keyField];
+    if (keyValue == null) {
+      return newKeyMap;
+    }
+    return {
+      ...newKeyMap,
+      [keyValue]: record.Id as string,
+    };
+  }, {} as Record<string, string>);
+  return Object.keys(keyMap).reduce((idMap, keyValue) => {
+    const id = keyMap[keyValue];
+    const newId = newKeyMap[keyValue];
+    if (id == null || newId == null) {
+      return idMap;
+    }
+    return {
+      ...idMap,
+      [id]: newId,
+    };
+  }, {} as Record<string, string>);
+}
+
+async function getRecordTypeIdMap(
+  conn: Connection,
+  dataset: LoadDataset, // RecordType
+  describer: Describer
+) {
+  const { object, headers, rows } = dataset;
+
+  const idIndex = headers.findIndex(
+    (header) => describer.findFieldDescription(object, header).type === 'id'
   );
-  return Object.keys(keyMap).reduce(
-    (idMap, keyValue) => {
-      const id = keyMap[keyValue];
-      const newId = newKeyMap[keyValue];
-      if (id == null || newId == null) {
-        return idMap;
-      }
-      return {
-        ...idMap,
-        [id]: newId
-      };
-    },
-    {} as Record<string, string>
+  const DeveloperNameIndex = headers.findIndex(
+    (header) => header === 'DeveloperName'
   );
+  const ObjectNameIndex = headers.findIndex(
+    (header) => header === 'SobjectType'
+  );
+
+  // query the org for recordTypes
+  const newRecordTypes: SFRecord[] = (
+    await conn.query('select id, DeveloperName, SobjectType from RecordType')
+  ).records;
+
+  // console.log(newRecordTypes);
+  // iterate the rows into objects
+  const output = {};
+  rows.forEach((row) => {
+    // grab oldId, find matching new Id
+    // console.log(
+    //   `looking for original RT id ${row[idIndex]} with object: ${object} and type: ${row[DeveloperNameIndex]}`
+    // );
+    const match = newRecordTypes.find(
+      (newRT) =>
+        newRT.SobjectType === row[ObjectNameIndex] &&
+        newRT.DeveloperName === row[DeveloperNameIndex]
+    );
+    if (match) {
+      // console.log(`match for original RT id ${row[idIndex]}`);
+      // console.log(match);
+      output[row[idIndex]] = match.Id;
+    } else {
+      // console.log(` no match for original RT id ${row[idIndex]}`);
+    }
+  });
+  return output;
 }
 
 /**
@@ -364,22 +401,28 @@ async function getAllExistingIdMap(
   const datasetMap = datasets.reduce(
     (datasetMap, dataset) => ({
       ...datasetMap,
-      [dataset.object]: dataset
+      [dataset.object]: dataset,
     }),
     {} as Record<string, LoadDataset>
   );
-  const idMap = (await Promise.all(
-    mappingPolicies.map(({ object, keyField }) => {
-      const dataset = datasetMap[object];
-      if (!dataset) {
-        throw new Error(`Input is not found for mapping object: ${object}`);
-      }
-      return getExistingIdMap(conn, dataset, keyField, describer);
-    })
-  )).reduce(
+  const idMap = (
+    await Promise.all(
+      mappingPolicies.map(({ object, keyField }) => {
+        const dataset = datasetMap[object];
+        if (!dataset) {
+          throw new Error(`Input is not found for mapping object: ${object}`);
+        }
+        if (object === 'RecordType') {
+          // console.log('mapping has RecordTypes');
+          return getRecordTypeIdMap(conn, dataset, describer);
+        }
+        return getExistingIdMap(conn, dataset, keyField, describer);
+      })
+    )
+  ).reduce(
     (idMap, ids) => ({
       ...idMap,
-      ...ids
+      ...ids,
     }),
     {} as Record<string, string>
   );
@@ -410,7 +453,7 @@ async function upload(
     totalCount,
     successes: [],
     failures: [],
-    blocked: []
+    blocked: [],
   };
   return uploadDatasets(
     conn,
@@ -425,7 +468,7 @@ async function upload(
 
 async function parseCSVInputs(inputs: UploadInput[], options: Object) {
   return Promise.all(
-    inputs.map(async input => {
+    inputs.map(async (input) => {
       const { object, csvData } = input;
       const [headers, ...rows] = await new Promise<string[][]>(
         (resolve, reject) => {

@@ -4,11 +4,14 @@
   "author": "Shinichi Tomita <shinichi.tomita@gmail.com>",
   "bugs": "https://github.com/stomita/sfdx-migration-automatic/issues",
   "dependencies": {
+    "@mshanemc/salesforce-migration-automatic": "1.9.0",
     "@oclif/command": "1",
     "@oclif/config": "1",
     "@oclif/errors": "1",
     "@salesforce/command": "^1.0.1",
     "@salesforce/core": "^1.0.1",
+    "csv-parse": "^4.8.8",
+    "csv-stringify": "^5.3.6",
     "fs-extra": "^7.0.1",
     "jsforce": "^1.9.1",
     "tslib": "1"
