@@ -3,12 +3,11 @@ import { AnyJson } from '@salesforce/ts-types';
 import { readdir, readFile } from 'fs-extra';
 import { Connection } from 'jsforce';
 import * as path from 'path';
-import { AutoMigrator } from '../../salesforce-migration-automatic/src/AutoMigrator';
-
 import {
+  AutoMigrator,
   RecordMappingPolicy,
   UploadInput,
-} from '../../salesforce-migration-automatic/src/types';
+} from '@mshanemc/salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
