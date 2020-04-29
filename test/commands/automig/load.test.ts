@@ -15,6 +15,7 @@ describe('automig:load', () => {
           totalCount: 0,
           successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
           failures: [],
+          blocked: [],
         };
       }
     })
