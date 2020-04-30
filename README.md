@@ -19,7 +19,7 @@ SFDX plugin to dump/load record data to/from CSV files to easily migrate data be
 <!-- install -->
 <!-- usage -->
 ```sh-session
-$ npm install -g sfdx-migration-automatic
+$ sfdx plugins:install sfdx-migration-automatic
 $ sfdx-migration-automatic COMMAND
 running command...
 $ sfdx-migration-automatic (-v|--version|version)
