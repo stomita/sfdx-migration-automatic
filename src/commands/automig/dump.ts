@@ -114,7 +114,7 @@ export default class Dump extends SfdxCommand {
       this.ux.setSpinnerStatus(message);
     });
     this.ux.startSpinner('dumping records');
-    const csvs = await am.dumpAsCSVData(config.targets);
+    const csvs = await am.dumpAsCSVData(config.targets, { defaultNamespace });
     this.ux.stopSpinner();
     this.ux.log(`fetched count: ${fetchedCount}`);
     try {

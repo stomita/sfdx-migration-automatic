@@ -133,7 +133,7 @@ export default class Load extends SfdxCommand {
       }
     });
     this.ux.startSpinner('Loading records');
-    const status = await am.loadCSVData(inputs, mappingPolicies);
+    const status = await am.loadCSVData(inputs, mappingPolicies, { defaultNamespace });
     this.ux.stopSpinner();
     this.ux.log();
     this.ux.log(`Successes: ${status.successes.length}`);
