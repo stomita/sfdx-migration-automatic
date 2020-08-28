@@ -2,5 +2,6 @@
   "commandDescription": "Load records from CSV files to Salesforce org, resolving relationships between records",
   "inputDirFlagDescription": "directory which includes input data files in CSV",
   "mappingObjectsFlagDescription": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
+  "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages",
   "deleteBeforeLoadFlagDescription": "delete all records in target objects before loading"
 }

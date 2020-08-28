@@ -47,6 +47,10 @@ export default class Load extends SfdxCommand {
         return { object, keyField };
       }
     }),
+    defaultnamespace: flags.string({
+      char: 'n',
+      description: messages.getMessage('defaultNamespaceFlagDescription')
+    }),
     deletebeforeload: flags.boolean({
       description: messages.getMessage('deleteBeforeLoadFlagDescription')
     }),
@@ -66,15 +70,21 @@ export default class Load extends SfdxCommand {
    *
    */
   public async run(): Promise<AnyJson> {
-    const inputDir = this.flags.inputdir;
+    const inputDir: string | undefined = this.flags.inputdir;
     if (!inputDir) {
       throw new Error('No --inputdir options found, specify directory with CSV files');
     }
+    const defaultNamespace: string | undefined = this.flags.defaultnamespace;
 
     const conn = this.org.getConnection();
     await conn.request('/');
     const { accessToken, instanceUrl } = conn;
-    const conn2 = new Connection({ accessToken, instanceUrl, version: this.flags.apiversion });
+    const conn2 = new Connection({
+      accessToken,
+      instanceUrl,
+      version: this.flags.apiversion,
+      callOptions: defaultNamespace ? { defaultNamespace } : undefined
+    });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
     const am = new AutoMigrator(conn2);

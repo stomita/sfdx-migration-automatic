@@ -44,6 +44,10 @@ export default class Dump extends SfdxCommand {
       char: 'd',
       description: messages.getMessage('outputDirFlagDescription')
     }),
+    defaultnamespace: flags.string({
+      char: 'n',
+      description: messages.getMessage('defaultNamespaceFlagDescription')
+    }),
     excludebom: flags.boolean({
       description: messages.getMessage('excludeBomFlagDescription')
     })
@@ -85,11 +89,17 @@ export default class Dump extends SfdxCommand {
     } else {
       throw new Error('No --config or --objects options are supplied to command arg');
     }
+    const defaultNamespace: string | undefined = this.flags.defaultnamespace;
 
     const conn = this.org.getConnection();
     await conn.request('/');
     const { accessToken, instanceUrl } = conn;
-    const conn2 = new Connection({ accessToken, instanceUrl, version: this.flags.apiversion });
+    const conn2 = new Connection({
+      accessToken,
+      instanceUrl,
+      version: this.flags.apiversion,
+      callOptions: defaultNamespace ? { defaultNamespace } : undefined
+    });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
     const am = new AutoMigrator(conn2);
