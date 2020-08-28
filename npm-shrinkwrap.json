@@ -3655,7 +3655,7 @@
       "version": "2.1.2"
     },
     "salesforce-migration-automatic": {
-      "version": "2.0.1",
+      "version": "2.0.2",
       "requires": {
         "csv-parse": "^4.9.0",
         "csv-stringify": "^5.4.3",
