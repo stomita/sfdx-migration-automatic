@@ -49,6 +49,9 @@ OPTIONS
 
   -f, --config=config                                                               dump configuration file
 
+  -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
+                                                                                    managed packages
+
   -o, --objects=objects                                                             object names to dump, optionally
                                                                                     paired with target scope (e.g.
                                                                                     Account,Contact,User:related)
@@ -92,6 +95,9 @@ OPTIONS
                                                                                     pair to map to existing records
                                                                                     (e.g.
                                                                                     User:Email,RecordType:DeveloperName
+
+  -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
+                                                                                    managed packages
 
   -u, --targetusername=targetusername                                               username or alias for the target
                                                                                     org; overrides default target org
