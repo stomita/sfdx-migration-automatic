@@ -57,7 +57,6 @@
     "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
     "posttest": "tslint -p test -t stylish",
     "prepare": "rm -rf lib && tsc -b && oclif-dev manifest && npm shrinkwrap",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && git add README.md"
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\""
   }
 }
