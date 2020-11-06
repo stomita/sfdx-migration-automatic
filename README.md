@@ -127,7 +127,7 @@ The `sfdx-migration-automatic` is available as a command without any prior confi
 
 ### Dump Configuration File
 
-```json
+```js
 {
     "outputDir": "./dump",
     "targets": [
