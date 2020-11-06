@@ -17,11 +17,15 @@ SFDX plugin to dump/load record data to/from CSV files to easily migrate data be
 
 <!-- tocstop -->
 <!-- install -->
+## Install
 <!-- usage -->
 ```sh-session
 $ sfdx plugins:install sfdx-migration-automatic
 ```
 <!-- usagestop -->
+
+## Commands
+
 <!-- commands -->
 * [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
@@ -116,3 +120,68 @@ EXAMPLES
 
 _See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v2.1.0/src/commands/automig/load.ts)_
 <!-- commandsstop -->
+
+## Configuration
+
+The `sfdx-migration-automatic` is available as a command without any prior configuration, but you can also provide a file if you want fine-grained control over the dump/load.
+
+### Dump Configuration File
+
+```json
+{
+    "outputDir": "./dump",
+    "targets": [
+        {
+          /**
+           * Select object to extract records.
+           * All records in the objects will be extracted.
+           * All the fields in the object definition are included in the results.
+           * Same as `--objects=Account` in CLI.
+           */
+            "target": "query",
+            "object": "Account"
+        },
+        {
+          /**
+           * Select records by specifying query conditions.
+           * Specified fields are only to be included in the results.
+           */
+            "target": "query",
+            "object": "Opportunity",
+            "fields": ["Id", "Name", "AccountId", "StageName", "Amount"],
+            "condition": "IsWon=true",
+            "orderby": "ClosedDate DESC",
+            "limit": 50000
+        },
+        {
+          /**
+           * Select records that are referenced by other records.
+           * Same as `--objects=Contact:related` in CLI
+           */
+            "target": "related",
+            "object": "Contact"
+        },
+        {
+          /**
+           * The `fields` can be specified in comma-separated string
+           */
+            "target": "related",
+            "object": "User",
+            "fields": "Id, Email"
+        },
+        {
+          /**
+           * The `ignoreFields` can exclude fields from the object definition.
+           */
+            "target": "related",
+            "object": "OpportunityLineItem",
+            "ignoreFields": "TotalPrice"
+        },
+        {
+            "target": "related",
+            "object": "PricebookEntry",
+            "fields": ["Id", "Name"]
+        }
+    ]
+}
+```
