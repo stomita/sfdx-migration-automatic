@@ -20,27 +20,19 @@ SFDX plugin to dump/load record data to/from CSV files to easily migrate data be
 <!-- usage -->
 ```sh-session
 $ sfdx plugins:install sfdx-migration-automatic
-$ sfdx-migration-automatic COMMAND
-running command...
-$ sfdx-migration-automatic (-v|--version|version)
-sfdx-migration-automatic/2.1.0 darwin-x64 node-v12.14.0
-$ sfdx-migration-automatic --help [COMMAND]
-USAGE
-  $ sfdx-migration-automatic COMMAND
-...
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-migration-automatic-automigdump---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-migration-automatic-automigload---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx-migration-automatic automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Dump records in Salesforce org to CSV files for migration usage
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:dump [--json] [--loglevel 
+  $ sfdx automig:dump [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -78,13 +70,13 @@ EXAMPLES
 
 _See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v2.1.0/src/commands/automig/dump.ts)_
 
-## `sfdx-migration-automatic automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Load records from CSV files to Salesforce org, resolving relationships between records
 
 ```
 USAGE
-  $ sfdx-migration-automatic automig:load [--json] [--loglevel 
+  $ sfdx automig:load [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
