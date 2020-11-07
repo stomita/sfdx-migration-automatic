@@ -219,6 +219,13 @@ export default class Load extends SfdxCommand {
         }
       );
     }
-    return status;
+    return { ...status, idMap: convertMapToObjectLiteral(status.idMap) };
   }
+}
+
+function convertMapToObjectLiteral<V>(map: Map<string, V>) {
+  return [...map].reduce((obj, [key, value]) => ({
+    ...obj,
+    [key]: value
+  }), {});
 }
