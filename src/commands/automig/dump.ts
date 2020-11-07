@@ -1,10 +1,10 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import { core, flags, SfdxCommand } from '@salesforce/command';
 import { fs } from '@salesforce/core';
-import {AnyJson} from '@salesforce/ts-types';
-import {readFile, writeFile} from 'fs-extra';
-import {Connection} from 'jsforce';
+import { AnyJson } from '@salesforce/ts-types';
+import { readFile, writeFile } from 'fs-extra';
+import { Connection } from 'jsforce';
 import * as path from 'path';
-import {AutoMigrator, DumpQuery} from 'salesforce-migration-automatic';
+import { AutoMigrator, DumpQuery } from 'salesforce-migration-automatic';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -14,7 +14,6 @@ core.Messages.importMessagesDirectory(__dirname);
 const messages = core.Messages.loadMessages('sfdx-migration-automatic', 'dump');
 
 export default class Dump extends SfdxCommand {
-
   public static description = messages.getMessage('commandDescription');
 
   public static get usage() {
@@ -22,35 +21,35 @@ export default class Dump extends SfdxCommand {
   }
 
   public static examples = [
-  '$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump',
-  '$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json'
+    '$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump',
+    '$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json',
   ];
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
     config: flags.filepath({
       char: 'f',
-      description: messages.getMessage('configFlagDescription')
+      description: messages.getMessage('configFlagDescription'),
     }),
     objects: flags.array({
       char: 'o',
       description: messages.getMessage('objectsFlagDescription'),
       map: (value: string) => {
-        const [ object, target = 'query' ] = value.split(':');
+        const [object, target = 'query'] = value.split(':');
         return { object, target };
-      }
+      },
     }),
     outputdir: flags.directory({
       char: 'd',
-      description: messages.getMessage('outputDirFlagDescription')
+      description: messages.getMessage('outputDirFlagDescription'),
     }),
     defaultnamespace: flags.string({
       char: 'n',
-      description: messages.getMessage('defaultNamespaceFlagDescription')
+      description: messages.getMessage('defaultNamespaceFlagDescription'),
     }),
     excludebom: flags.boolean({
-      description: messages.getMessage('excludeBomFlagDescription')
-    })
+      description: messages.getMessage('excludeBomFlagDescription'),
+    }),
   };
 
   // Comment this out if your command does not require an org username
@@ -84,10 +83,12 @@ export default class Dump extends SfdxCommand {
     } else if (this.flags.objects) {
       config = {
         outputDir: this.flags.outputdir || '.',
-        targets: this.flags.objects
+        targets: this.flags.objects,
       };
     } else {
-      throw new Error('No --config or --objects options are supplied to command arg');
+      throw new Error(
+        'No --config or --objects options are supplied to command arg',
+      );
     }
     const defaultNamespace: string | undefined = this.flags.defaultnamespace;
 
@@ -98,7 +99,7 @@ export default class Dump extends SfdxCommand {
       accessToken,
       instanceUrl,
       version: this.flags.apiversion,
-      callOptions: defaultNamespace ? { defaultNamespace } : undefined
+      callOptions: defaultNamespace ? { defaultNamespace } : undefined,
     });
     conn2.bulk.pollInterval = 10000;
     conn2.bulk.pollTimeout = 600000;
@@ -106,10 +107,12 @@ export default class Dump extends SfdxCommand {
 
     let fetchedCount = 0;
     let fetchedCountPerObject = {};
-    am.on('dumpProgress', status => {
+    am.on('dumpProgress', (status) => {
       fetchedCount = status.fetchedCount;
       fetchedCountPerObject = status.fetchedCountPerObject;
-      const perObjectCount = Object.keys(fetchedCountPerObject).map(object => `${object}: ${fetchedCountPerObject[object]}`).join(', ');
+      const perObjectCount = Object.keys(fetchedCountPerObject)
+        .map((object) => `${object}: ${fetchedCountPerObject[object]}`)
+        .join(', ');
       const message = `fetched count: ${fetchedCount}, ${perObjectCount}`;
       this.ux.setSpinnerStatus(message);
     });
@@ -131,21 +134,21 @@ export default class Dump extends SfdxCommand {
         const bom = this.flags.excludebom ? '' : '\ufeff';
         await writeFile(filepath, bom + csv, 'utf8');
         return { filepath, count };
-      })
+      }),
     );
     this.ux.log();
-    this.ux.table(
-      results,
-      {
-        columns: [{
+    this.ux.table(results, {
+      columns: [
+        {
           key: 'filepath',
-          label: 'Output File Path'
-        }, {
+          label: 'Output File Path',
+        },
+        {
           key: 'count',
-          label: 'Count'
-        }]
-      }
-    );
+          label: 'Count',
+        },
+      ],
+    });
     return { fetchedCount, results };
   }
 }
