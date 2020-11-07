@@ -1,0 +1,13 @@
+{
+  "outputDir": "./dump",
+  "targets": [{
+    "target": "query",
+    "object": "Account",
+    "ignoreFields": "PhotoUrl,OwnerId,CreatedById,LastModifiedById"
+  }, {
+    "target": "query",
+    "object": "Contact",
+    "ignoreFields": "PhotoUrl,OwnerId,CreatedById,LastModifiedById"
+  }],
+  "idMapFile": "./idmap.json"
+}
