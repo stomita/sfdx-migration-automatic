@@ -1,10 +1,14 @@
 import { core, flags, SfdxCommand } from '@salesforce/command';
-import { fs } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
-import { readFile, writeFile } from 'fs-extra';
+import { existsSync, readFile, outputFile } from 'fs-extra';
 import { Connection } from 'jsforce';
 import * as path from 'path';
-import { AutoMigrator, DumpQuery } from 'salesforce-migration-automatic';
+import {
+  AutoMigrator,
+  DumpProgress,
+  DumpQuery,
+} from 'salesforce-migration-automatic';
+import { convertObjectLiteralToMap } from '../../util';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -50,6 +54,12 @@ export default class Dump extends SfdxCommand {
     excludebom: flags.boolean({
       description: messages.getMessage('excludeBomFlagDescription'),
     }),
+    ignoresystemdate: flags.boolean({
+      description: messages.getMessage('ignoreSystemDateFlagDescription'),
+    }),
+    ignorereadonly: flags.boolean({
+      description: messages.getMessage('ignoreReadOnlyFlagDescription'),
+    }),
   };
 
   // Comment this out if your command does not require an org username
@@ -67,8 +77,12 @@ export default class Dump extends SfdxCommand {
     interface DumpConfig {
       outputDir: string;
       targets: DumpQuery[];
+      idMapFile?: string;
+      ignoreSystemDate?: boolean;
+      ignoreReadOnly?: boolean;
     }
 
+    // Read configuration file
     let config: DumpConfig;
     if (this.flags.config) {
       const configFileName: string = this.flags.config;
@@ -80,21 +94,35 @@ export default class Dump extends SfdxCommand {
       } else if (!path.isAbsolute(config.outputDir)) {
         config.outputDir = path.join(configDir, config.outputDir);
       }
+      if (this.flags.idmap) {
+        config.idMapFile = this.flags.idmap;
+      } else if (config.idMapFile && !path.isAbsolute(config.idMapFile)) {
+        config.idMapFile = path.join(configDir, config.idMapFile);
+      }
     } else if (this.flags.objects) {
       config = {
         outputDir: this.flags.outputdir || '.',
         targets: this.flags.objects,
+        idMapFile: this.flags.idmap,
       };
     } else {
       throw new Error(
         'No --config or --objects options are supplied to command arg',
       );
     }
-    const defaultNamespace: string | undefined = this.flags.defaultnamespace;
+    const ignoreSystemDate: boolean | undefined =
+      config.ignoreSystemDate || this.flags.ignoresystemdate;
+    const ignoreReadOnly: boolean | undefined =
+      config.ignoreReadOnly || this.flags.ignorereadonly;
 
+    // Setup connection
+    if (!this.org) {
+      throw new Error('No connecting organization found');
+    }
     const conn = this.org.getConnection();
     await conn.request('/');
     const { accessToken, instanceUrl } = conn;
+    const defaultNamespace: string | undefined = this.flags.defaultnamespace;
     const conn2 = new Connection({
       accessToken,
       instanceUrl,
@@ -105,9 +133,19 @@ export default class Dump extends SfdxCommand {
     conn2.bulk.pollTimeout = 600000;
     const am = new AutoMigrator(conn2);
 
+    // Read id map from file
+    let idMap: Map<string, string> | undefined = undefined;
+    if (config.idMapFile && existsSync(config.idMapFile)) {
+      const idMapJson = await readFile(config.idMapFile, 'utf8');
+      idMap = convertObjectLiteralToMap(
+        JSON.parse(idMapJson) as { [k: string]: string },
+      );
+    }
+
+    // Start dumping
     let fetchedCount = 0;
-    let fetchedCountPerObject = {};
-    am.on('dumpProgress', (status) => {
+    let fetchedCountPerObject: { [name: string]: number } = {};
+    am.on('dumpProgress', (status: DumpProgress) => {
       fetchedCount = status.fetchedCount;
       fetchedCountPerObject = status.fetchedCountPerObject;
       const perObjectCount = Object.keys(fetchedCountPerObject)
@@ -117,14 +155,14 @@ export default class Dump extends SfdxCommand {
       this.ux.setSpinnerStatus(message);
     });
     this.ux.startSpinner('dumping records');
-    const csvs = await am.dumpAsCSVData(config.targets, { defaultNamespace });
+    const csvs = await am.dumpAsCSVData(config.targets, {
+      defaultNamespace,
+      idMap,
+      ignoreSystemDate,
+      ignoreReadOnly,
+    });
     this.ux.stopSpinner();
     this.ux.log(`fetched count: ${fetchedCount}`);
-    try {
-      await fs.stat(config.outputDir);
-    } catch (e) {
-      await fs.mkdirp(config.outputDir);
-    }
     const results = await Promise.all(
       config.targets.map(async ({ object }, i) => {
         const csv = csvs[i];
@@ -132,7 +170,7 @@ export default class Dump extends SfdxCommand {
         const filename = `${object}.csv`;
         const filepath = path.join(config.outputDir, filename);
         const bom = this.flags.excludebom ? '' : '\ufeff';
-        await writeFile(filepath, bom + csv, 'utf8');
+        await outputFile(filepath, bom + csv, 'utf8');
         return { filepath, count };
       }),
     );

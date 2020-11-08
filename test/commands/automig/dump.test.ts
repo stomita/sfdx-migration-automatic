@@ -35,17 +35,11 @@ describe('automig:dump', () => {
         throw new Error('file not found: ' + filepath);
       }
     })
-    .stub(fs, 'writeFile', function writeFileStub(filepath: string, data: any) {
+    .stub(fs, 'outputFile', function outputFileStub(
+      filepath: string,
+      data: any,
+    ) {
       files[filepath] = data;
-    })
-    .stub(fs, 'stat', function statStub(filepath: string) {
-      if (!files[filepath]) {
-        throw new Error();
-      }
-      return {};
-    })
-    .stub(fs, 'mkdirp', function mkdirpStub(_filepath: string) {
-      return;
     })
     .stdout();
 
