@@ -2,12 +2,15 @@
   "outputDir": "./dump",
   "targets": [{
     "target": "query",
-    "object": "Account",
-    "ignoreFields": "PhotoUrl,OwnerId,CreatedById,LastModifiedById"
+    "object": "Account"
   }, {
     "target": "query",
-    "object": "Contact",
-    "ignoreFields": "PhotoUrl,OwnerId,CreatedById,LastModifiedById"
+    "object": "Contact"
+  }, {
+    "target": "related",
+    "object": "User",
+    "fields": "Id,Name"
   }],
+  "ignoreReadOnly": true,
   "idMapFile": "./idmap.json"
 }
