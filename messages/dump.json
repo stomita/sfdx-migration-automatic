@@ -4,5 +4,7 @@
   "objectsFlagDescription": "object names to dump, optionally paired with target scope (e.g. Account,Contact,User:related)",
   "outputDirFlagDescription": "output directory for dumped CSV files",
   "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages",
-  "excludeBomFlagDescription": "do not prepend byte order mark (\\ufeff) in output files"
+  "excludeBomFlagDescription": "do not prepend byte order mark (\\ufeff) in output files",
+  "ignoreSystemDateFlagDescription": "exclude system-defined date fields from the dump target (e.g. CreatedDate, LastModifiedDate)",
+  "ignoreReadOnlyFlagDescription": "exclude non-createable fields from the dump target"
 }

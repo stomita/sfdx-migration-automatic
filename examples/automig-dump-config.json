@@ -1,0 +1,16 @@
+{
+  "outputDir": "./dump",
+  "targets": [{
+    "target": "query",
+    "object": "Account"
+  }, {
+    "target": "query",
+    "object": "Contact"
+  }, {
+    "target": "related",
+    "object": "User",
+    "fields": "Id,Name"
+  }],
+  "ignoreReadOnly": true,
+  "idMapFile": "./idmap.json"
+}

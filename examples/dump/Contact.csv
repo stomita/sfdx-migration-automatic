@@ -1,0 +1,4 @@
+﻿Id,AccountId,LastName,FirstName,Salutation,OtherStreet,OtherCity,OtherState,OtherPostalCode,OtherCountry,OtherLatitude,OtherLongitude,OtherGeocodeAccuracy,MailingStreet,MailingCity,MailingState,MailingPostalCode,MailingCountry,MailingLatitude,MailingLongitude,MailingGeocodeAccuracy,Phone,Fax,MobilePhone,HomePhone,OtherPhone,AssistantPhone,ReportsToId,Email,Title,Department,AssistantName,LeadSource,Birthdate,Description,OwnerId,EmailBouncedReason,EmailBouncedDate,Jigsaw,CleanStatus,IndividualId
+0035D00001JX1TeQAL,0015D00000eLzgMQAS,Tiger,Scott,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0055D000003hh8nQAA,,,,Pending,
+0035D00001JX1TfQAL,0015D00000eLzgLQAS,Doe,Jane,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0055D000003hh8nQAA,,,,Pending,
+0035D00001JX1TgQAL,0015D00000eLzgLQAS,Doe,John,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0055D000003hh8nQAA,,,,Pending,

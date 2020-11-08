@@ -1,0 +1,10 @@
+{
+  "inputDir": "./dump",
+  "mappings": [{
+    "object": "User",
+    "defaultMapping": {
+      "condition": "Name = 'User User'"
+    }
+  }],
+  "idMapFile": "./idmap.json"
+}
