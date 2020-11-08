@@ -11,7 +11,7 @@
     "@salesforce/core": "^2.4.0",
     "fs-extra": "^9.0.0",
     "jsforce": "^1.10.0",
-    "salesforce-migration-automatic": "^3.1.0",
+    "salesforce-migration-automatic": "^3.1.3",
     "tslib": "^1.11.1"
   },
   "devDependencies": {
