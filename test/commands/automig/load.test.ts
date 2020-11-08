@@ -4,29 +4,32 @@ import * as fs from 'fs-extra';
 
 import { EventEmitter } from 'events';
 
-
 describe('automig:load', () => {
   //
   const ts = test
     .withOrg({ username: 'test@example.org' }, true)
-    .stub(automig, 'AutoMigrator', class AutoMigratorStub extends EventEmitter {
-      async loadCSVData(inputs) {
-        return {
-          totalCount: 0,
-          successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
-          failures: [],
-          blocked: [],
-        };
-      }
-    })
-    .stub(fs, 'readdir', function readdirStub(dirpath) {
+    .stub(
+      automig,
+      'AutoMigrator',
+      class AutoMigratorStub extends EventEmitter {
+        async loadCSVData(_inputs: any) {
+          return {
+            totalCount: 0,
+            successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
+            failures: [],
+            blocked: [],
+          };
+        }
+      },
+    )
+    .stub(fs, 'readdir', function readdirStub(dirpath: string) {
       if (dirpath === 'path/to/csv') {
         return ['Account.csv', 'Contact.csv'];
       } else {
         return [];
       }
     })
-    .stub(fs, 'readFile', function readFileStub(filepath) {
+    .stub(fs, 'readFile', function readFileStub(filepath: string) {
       if (filepath === 'path/to/csv/Account.csv') {
         return `Id,ParentId\na001,\na002,a001`;
       } else if (filepath === 'path/to/csv/Contact.csv') {
@@ -36,21 +39,30 @@ describe('automig:load', () => {
       }
     })
     .stdout();
-  
-  /**
-   * 
-   */
-  ts.command(['automig:load', '--inputdir', 'path/to/csv'])
-    .it('runs automig:load --inputdir path/to/csv', ctx => {
-      expect(ctx.stdout).includes('Successes: 1');
-    })
 
   /**
-   * 
+   *
    */
-  ts.command(['automig:load', '--inputdir', 'path/to/csv', '--mappingobjects', 'User:Email,RecordType:DeveloperName'])
-    .it('runs automig:load --inputdir path/to/csv --mappingobjects User:Email,RecordType:DeveloperName', ctx => {
+  ts.command(['automig:load', '--inputdir', 'path/to/csv']).it(
+    'runs automig:load --inputdir path/to/csv',
+    (ctx) => {
       expect(ctx.stdout).includes('Successes: 1');
-    })
+    },
+  );
 
+  /**
+   *
+   */
+  ts.command([
+    'automig:load',
+    '--inputdir',
+    'path/to/csv',
+    '--mappingobjects',
+    'User:Email,RecordType:DeveloperName',
+  ]).it(
+    'runs automig:load --inputdir path/to/csv --mappingobjects User:Email,RecordType:DeveloperName',
+    (ctx) => {
+      expect(ctx.stdout).includes('Successes: 1');
+    },
+  );
 });
