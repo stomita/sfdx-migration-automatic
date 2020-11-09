@@ -1,12 +1,12 @@
 {
   "commandDescription": "Load records from CSV files to Salesforce org, resolving relationships between records",
   "configFlagDescription": "load configuration file",
+  "idMapFlagDescription": "id map file",
   "inputDirFlagDescription": "directory which includes input data files in CSV",
   "targetObjectsFlagDescription": "list of object names to include in loading",
   "ignoreObjectsFlagDescription": "list of object names to exclude from loading",
   "mappingObjectsFlagDescription": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
   "ignoreFieldsFlagDescription": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
   "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages",
-  "idMapFlagDescription": "id map file",
   "deleteBeforeLoadFlagDescription": "delete all records in target objects before loading"
 }
