@@ -45,6 +45,8 @@ OPTIONS
 
   -f, --config=config                                                               dump configuration file
 
+  -i, --idmap=idmap                                                                 id map file
+
   -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
                                                                                     managed packages
 
@@ -61,10 +63,25 @@ OPTIONS
   --excludebom                                                                      do not prepend byte order mark
                                                                                     (\ufeff) in output files
 
+  --ignorefields=ignorefields                                                       list of object.field path to exclude
+                                                                                    from dumping (e.g.
+                                                                                    Account.OwnerId,OpportunityLineItem.
+                                                                                    TotalPrice)
+
+  --ignorereadonly                                                                  exclude non-createable fields from
+                                                                                    the dump target
+
+  --ignoresystemdate                                                                exclude system-defined date fields
+                                                                                    from the dump target (e.g.
+                                                                                    CreatedDate, LastModifiedDate)
+
   --json                                                                            format output as json
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+  --verbose                                                                         emit additional command output to
+                                                                                    stdout
 
 EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related 
@@ -72,7 +89,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v2.1.0/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v3.0.0/src/commands/automig/dump.ts)_
 
 ## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -84,8 +101,12 @@ USAGE
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
-  -d, --inputdir=inputdir                                                           (required) directory which includes
-                                                                                    input data files in CSV
+  -d, --inputdir=inputdir                                                           directory which includes input data
+                                                                                    files in CSV
+
+  -f, --config=config                                                               load configuration file
+
+  -i, --idmap=idmap                                                                 id map file
 
   -m, --mappingobjects=mappingobjects                                               list of object and key field name
                                                                                     pair to map to existing records
@@ -104,10 +125,21 @@ OPTIONS
   --deletebeforeload                                                                delete all records in target objects
                                                                                     before loading
 
+  --ignorefields=ignorefields                                                       list of object.field path to exclude
+                                                                                    from loading (e.g.
+                                                                                    Account.OwnerId,OpportunityLineItem.
+                                                                                    TotalPrice)
+
+  --ignoreobjects=ignoreobjects                                                     list of object names to exclude from
+                                                                                    loading
+
   --json                                                                            format output as json
 
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+
+  --targetobjects=targetobjects                                                     list of object names to include in
+                                                                                    loading
 
   --verbose                                                                         emit additional command output to
                                                                                     stdout
@@ -118,7 +150,7 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v2.1.0/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v3.0.0/src/commands/automig/load.ts)_
 <!-- commandsstop -->
 
 ## Configuration
