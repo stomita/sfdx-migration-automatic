@@ -176,7 +176,7 @@ export default class Load extends SfdxCommand {
     }
     const objectIgnoreFields = new Map<string, string[]>();
     if (this.flags.ignorefields) {
-      for (const fieldPath of this.flags.ignoreFields as string[]) {
+      for (const fieldPath of this.flags.ignorefields as string[]) {
         const [object, field] = fieldPath.split('.');
         const ignoreFields = [...(objectIgnoreFields.get(object) ?? []), field];
         objectIgnoreFields.set(object, ignoreFields);

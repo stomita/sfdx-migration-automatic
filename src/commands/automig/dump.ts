@@ -8,7 +8,7 @@ import {
   DumpProgress,
   DumpQuery,
 } from 'salesforce-migration-automatic';
-import { convertObjectLiteralToMap } from '../../util';
+import { convertObjectLiteralToMap, toStringList } from '../../util';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -54,12 +54,20 @@ export default class Dump extends SfdxCommand {
     excludebom: flags.boolean({
       description: messages.getMessage('excludeBomFlagDescription'),
     }),
+    ignorefields: flags.array({
+      description: messages.getMessage('ignoreFieldsFlagDescription'),
+    }),
     ignoresystemdate: flags.boolean({
       description: messages.getMessage('ignoreSystemDateFlagDescription'),
     }),
     ignorereadonly: flags.boolean({
       description: messages.getMessage('ignoreReadOnlyFlagDescription'),
     }),
+    idmap: flags.filepath({
+      char: 'i',
+      description: messages.getMessage('idMapFlagDescription'),
+    }),
+    verbose: flags.builtin(),
   };
 
   // Comment this out if your command does not require an org username
@@ -114,6 +122,14 @@ export default class Dump extends SfdxCommand {
       config.ignoreSystemDate || this.flags.ignoresystemdate;
     const ignoreReadOnly: boolean | undefined =
       config.ignoreReadOnly || this.flags.ignorereadonly;
+    const objectIgnoreFields = new Map<string, string[]>();
+    if (this.flags.ignorefields) {
+      for (const fieldPath of this.flags.ignorefields as string[]) {
+        const [object, field] = fieldPath.split('.');
+        const ignoreFields = [...(objectIgnoreFields.get(object) ?? []), field];
+        objectIgnoreFields.set(object, ignoreFields);
+      }
+    }
 
     // Setup connection
     if (!this.org) {
@@ -155,7 +171,20 @@ export default class Dump extends SfdxCommand {
       this.ux.setSpinnerStatus(message);
     });
     this.ux.startSpinner('dumping records');
-    const csvs = await am.dumpAsCSVData(config.targets, {
+    const targets = config.targets.map((target) => {
+      const ignoreFields = objectIgnoreFields.get(target.object);
+      if (ignoreFields) {
+        return {
+          ...target,
+          ignoreFields: [
+            ...toStringList(target.ignoreFields ?? []),
+            ...ignoreFields,
+          ],
+        };
+      }
+      return target;
+    });
+    const csvs = await am.dumpAsCSVData(targets, {
       defaultNamespace,
       idMap,
       ignoreSystemDate,
