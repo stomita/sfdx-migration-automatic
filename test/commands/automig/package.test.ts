@@ -12,7 +12,17 @@ describe('automig:package', () => {
       _options: any,
     ) {
       return {
-        state: 'Succeeded',
+        id: 'p1234567',
+        status: 'Succeeded',
+        success: true,
+        done: true,
+        numberComponentErrors: 0,
+        numberComponentsDeployed: 2,
+        numberComponentsTotal: 2,
+        numberTestErrors: 0,
+        numberTestsCompleted: 0,
+        numberTestsTotal: 0,
+        packageInfo: { Id: 'p000001' },
       };
     })
     .stub(fs, 'readdir', function readdirStub(dirpath: string) {
