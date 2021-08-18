@@ -29,6 +29,7 @@ $ sfdx plugins:install sfdx-migration-automatic
 <!-- commands -->
 * [`sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigdump---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigload---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-automigpackage---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
 ## `sfdx automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -89,7 +90,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v3.0.0/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.0.0/src/commands/automig/dump.ts)_
 
 ## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -150,7 +151,63 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v3.0.0/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.0.0/src/commands/automig/load.ts)_
+
+## `sfdx automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Bundle CSV record data as a Salesforce Package, including web UI for one-click data import
+
+```
+USAGE
+  $ sfdx automig:package [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -d, --inputdir=inputdir                                                           directory which includes input data
+                                                                                    files in CSV
+
+  -f, --config=config                                                               load configuration file
+
+  -m, --mappingobjects=mappingobjects                                               list of object and key field name
+                                                                                    pair to map to existing records
+                                                                                    (e.g.
+                                                                                    User:Email,RecordType:DeveloperName
+
+  -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
+                                                                                    managed packages
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --ignorefields=ignorefields                                                       list of object.field path to exclude
+                                                                                    from loading (e.g.
+                                                                                    Account.OwnerId,OpportunityLineItem.
+                                                                                    TotalPrice)
+
+  --ignoreobjects=ignoreobjects                                                     list of object names to exclude from
+                                                                                    loading
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+  --targetobjects=targetobjects                                                     list of object names to include in
+                                                                                    loading
+
+  --verbose                                                                         emit additional command output to
+                                                                                    stdout
+
+EXAMPLES
+  $ sfdx automig:package --targetusername username@example.com --inputdir ./data
+  $ sfdx automig:package --targetusername username@example.com --inputdir ./data --mappingobjects 
+  User:Email,RecordType:DeveloperName
+```
+
+_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.0.0/src/commands/automig/package.ts)_
 <!-- commandsstop -->
 
 ## Configuration
