@@ -15,3 +15,13 @@ export function convertMapToObjectLiteral<V>(map: Map<string, V>) {
 export function convertObjectLiteralToMap<V>(obj: { [key: string]: V }) {
   return new Map(Object.keys(obj).map((key) => [key, obj[key]]));
 }
+
+export function asArray<T>(arr: T | T[] | null | undefined): T[] {
+  if (arr == null) {
+    return [];
+  }
+  if (Object.prototype.toString.apply(arr) !== '[object Array]') {
+    return [arr as T];
+  }
+  return arr as T[];
+}

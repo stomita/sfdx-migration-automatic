@@ -3,6 +3,7 @@ import { AnyJson } from '@salesforce/ts-types';
 import { Connection } from 'jsforce';
 import { createPackage } from 'salesforce-migration-app-pack';
 import { readLoadConfig, readUploadInputs } from '../../loadenv';
+import { asArray } from '../../util';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -107,7 +108,62 @@ export default class Load extends SfdxCommand {
       packageName,
     });
     this.ux.stopSpinner();
-    this.ux.log(ret.state);
-    return { ...ret };
+    this.ux.log();
+    this.ux.log(`Status: ${res.status}`);
+    this.ux.log(`Success: ${res.success}`);
+    this.ux.log(`Done: ${res.done}`);
+    this.ux.log(`Number Component Errors: ${res.numberComponentErrors}`);
+    this.ux.log(`Number Components Deployed: ${res.numberComponentsDeployed}`);
+    this.ux.log(`Number Components Total: ${res.numberComponentsTotal}`);
+    this.ux.log(`Number Test Errors: ${res.numberTestErrors}`);
+    this.ux.log(`Number Tests Completed: ${res.numberTestsCompleted}`);
+    this.ux.log(`Number Tests Total: ${res.numberTestsTotal}`);
+
+    if (res.packageInfo?.Id) {
+      this.ux.log();
+      this.ux.log(`Deployed Package ID: ${res.packageInfo.Id}`);
+    }
+
+    const details: any = res.details;
+    if (details) {
+      this.logger.debug('details =>', details);
+      if (this.flags.verbose) {
+        this.ux.log();
+        const successes = asArray(details.componentFailures);
+        if (successes.length > 0) {
+          this.ux.log('Successes:');
+        }
+        for (const s of successes) {
+          const flag =
+            String(s.changed) === 'true'
+              ? '(M)'
+              : String(s.created) === 'true'
+              ? '(A)'
+              : String(s.deleted) === 'true'
+              ? '(D)'
+              : '(~)';
+          this.ux.log(
+            ` - ${flag} ${s.fileName}${
+              s.componentType ? `[${s.componentType}]` : ''
+            }`,
+          );
+        }
+      }
+      const failures = asArray(details.componentFailures);
+      if (failures && failures.length > 0) {
+        this.ux.log();
+        this.ux.log('Failures:');
+        for (const f of failures) {
+          this.ux.log(
+            ` - ${f.problemType} on ${f.fileName}${
+              typeof f.lineNumber !== 'undefined'
+                ? ` (${f.lineNumber}:${f.columnNumber})`
+                : ''
+            } : ${f.problem}`,
+          );
+        }
+      }
+    }
+    return res as AnyJson;
   }
 }
