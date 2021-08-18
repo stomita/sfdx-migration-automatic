@@ -15,7 +15,7 @@ const messages = core.Messages.loadMessages(
   'package',
 );
 
-export default class Load extends SfdxCommand {
+export default class Package extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static get usage() {
