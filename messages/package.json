@@ -1,10 +1,11 @@
 {
-  "commandDescription": "Bundle CSV record data as a Salesforce Package, including web UI for one-click data import",
+  "commandDescription": "Bundle record data and one-click migration script as a Salesforce Package",
   "configFlagDescription": "load configuration file",
   "inputDirFlagDescription": "directory which includes input data files in CSV",
   "targetObjectsFlagDescription": "list of object names to include in loading",
   "ignoreObjectsFlagDescription": "list of object names to exclude from loading",
   "mappingObjectsFlagDescription": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
   "ignoreFieldsFlagDescription": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
-  "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages"
+  "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages",
+  "packageNameFlagDescription": "package name to bundle record data and migration script"
 }

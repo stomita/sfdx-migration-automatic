@@ -57,6 +57,10 @@ export default class Load extends SfdxCommand {
       char: 'n',
       description: messages.getMessage('defaultNamespaceFlagDescription'),
     }),
+    packagename: flags.string({
+      char: 'p',
+      description: messages.getMessage('packageNameFlagDescription'),
+    }),
     verbose: flags.builtin(),
   };
 
@@ -94,11 +98,13 @@ export default class Load extends SfdxCommand {
       version: this.flags.apiversion,
       callOptions: defaultNamespace ? { defaultNamespace } : undefined,
     });
-    conn2.metadata.pollInterval = 10000;
-    conn2.metadata.pollTimeout = 600000;
-    this.ux.startSpinner('Creating Packages');
-    const ret = await createPackage(conn2, inputs, config.mappings, {
-      defaultNamespace,
+    this.ux.startSpinner('Creating Migration App Package');
+    const packageName: string | undefined = this.flags.packagename;
+    const res = await createPackage(conn2, {
+      inputs,
+      mappings: config.mappings,
+      options: { defaultNamespace },
+      packageName,
     });
     this.ux.stopSpinner();
     this.ux.log(ret.state);
