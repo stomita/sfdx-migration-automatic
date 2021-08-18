@@ -649,10 +649,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/jsforce@^1.9.16":
-  version "1.9.24"
-  resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.9.24.tgz#1df726f4c3ff5f6b4ad7ea6e2a5348cad420d16d"
-  integrity sha512-jOEAeMuckvZZggmdBTEtD7dlBdc68W6co3d1ogMXSbSZnKDDJfMjYfY0exKCZNSOMPy9NSYiSbZEMAaAwUTeKA==
+"@types/jsforce@^1.9.34":
+  version "1.9.34"
+  resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.9.34.tgz#d1aa3d92a921d85f8487b1d134b34788279d9d3a"
+  integrity sha512-Wc337FTkLbKjOUOqeYTP1QWpiy9/XGMHM+l0KQA+sL1HxTO3ohb0BHLQYAGYobeNx4umtdJBM6UWBV1o4JOUUA==
   dependencies:
     "@types/node" "*"
 
@@ -1495,9 +1495,9 @@ csprng@*, csprng@~0.1.2:
     sequin "*"
 
 csv-parse@^4.10.1:
-  version "4.14.0"
-  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.14.0.tgz#5e1f62234a9790de49e8322df823187f8d500d26"
-  integrity sha512-Mh6JEKAD4/scRM7jbQ5FbhuHbAVp+FN27S6PMF5ILuR7ofclfR0Fj6YmutFMXVgaNk/4GTy9bkmV8SMzwsv45Q==
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.16.0.tgz#b4c875e288a41f7ff917cb0d7d45880d563034f6"
+  integrity sha512-Zb4tGPANH4SW0LgC9+s9Mnequs9aqn7N3/pCqNbVjs2XhEF6yWNU2Vm4OGl1v2Go9nw8rXt87Cm2QN/o6Vpqgg==
 
 csv-parse@^4.6.3:
   version "4.8.2"
@@ -3042,27 +3042,6 @@ jsforce@1.9.3, jsforce@^1.9.3:
     request "^2.72.0"
     xml2js "^0.4.16"
 
-jsforce@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-1.10.0.tgz#0f0eb3b9e3fa1bc10da6b290828a44cd37778bb5"
-  integrity sha512-d6CPBo76G0Ts7qJySktZMviHvfj2f2kJV+zaGuP1bioRhkvMcfvvpYL9G0xvgd8DX7zw5aMN4xsVeLD8skxFcA==
-  dependencies:
-    base64-url "^2.2.0"
-    co-prompt "^1.0.0"
-    coffeescript "^1.10.0"
-    commander "^2.9.0"
-    csv-parse "^4.10.1"
-    csv-stringify "^1.0.4"
-    faye "^1.2.0"
-    inherits "^2.0.1"
-    lodash "^4.17.19"
-    multistream "^2.0.5"
-    opn "^5.3.0"
-    promise "^7.1.1"
-    readable-stream "^2.1.0"
-    request "^2.72.0"
-    xml2js "^0.4.16"
-
 jsforce@^1.10.1:
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-1.10.1.tgz#ca1cf58d4439d94e1f84482d83081acd12c93269"
@@ -4316,10 +4295,10 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-salesforce-migration-app-pack@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-1.0.0.tgz#b0de7c35efda5c300c75816c07f1b5e4308f8dd4"
-  integrity sha512-+fphEQ+vnWGUx9JV1Ibl1VRfZ3+7c9lwGcD+mx+oglQ/MdFc0oboFcwvZZNof6OaFP1zCat3QWtyj29qIZN+5Q==
+salesforce-migration-app-pack@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-1.1.0.tgz#d194881d7ea96f1cf5f0c574cc674355cbf586ff"
+  integrity sha512-qrSEhNV0Zh53KFjgF/zfFkoW7ldhstWALmExM/K6zlCUB4jKH/1ZHfHcasdJhLGIciD3g7IFQhpWsRKjjCJD2w==
   dependencies:
     "@babel/runtime" "^7.15.3"
     adm-zip "^0.5.5"
