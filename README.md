@@ -90,7 +90,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.0.0/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.1.0/src/commands/automig/dump.ts)_
 
 ## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -151,11 +151,11 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.0.0/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.1.0/src/commands/automig/load.ts)_
 
 ## `sfdx automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
-Bundle CSV record data as a Salesforce Package, including web UI for one-click data import
+Bundle record data and one-click migration script as a Salesforce Package
 
 ```
 USAGE
@@ -175,6 +175,9 @@ OPTIONS
 
   -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
                                                                                     managed packages
+
+  -p, --packagename=packagename                                                     package name to bundle record data
+                                                                                    and migration script
 
   -u, --targetusername=targetusername                                               username or alias for the target
                                                                                     org; overrides default target org
@@ -207,7 +210,7 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.0.0/src/commands/automig/package.ts)_
+_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.1.0/src/commands/automig/package.ts)_
 <!-- commandsstop -->
 
 ## Configuration
