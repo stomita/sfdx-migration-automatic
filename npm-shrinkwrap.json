@@ -5128,7 +5128,7 @@
       "version": "2.1.2"
     },
     "salesforce-migration-app-pack": {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "requires": {
         "@babel/runtime": "^7.15.3",
         "adm-zip": "^0.5.5",
