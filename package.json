@@ -1,6 +1,6 @@
 {
   "name": "sfdx-migration-automatic",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "author": "Shinichi Tomita <shinichi.tomita@gmail.com>",
   "bugs": "https://github.com/stomita/sfdx-migration-automatic/issues",
   "dependencies": {
