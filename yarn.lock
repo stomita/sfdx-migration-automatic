@@ -4295,10 +4295,10 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-salesforce-migration-app-pack@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-1.2.2.tgz#ab3947c3147404bf39c92720a36643083b0af222"
-  integrity sha512-0ipOdWOQtnXmk9N3GfO7KFuASwjuU1Bm3D7ADyyG6jSjRlK5+cITzlJEo5xg3SBHe6CGXJgaEF9UflSJ1Z3Yvg==
+salesforce-migration-app-pack@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-1.2.3.tgz#79d64831998cde8144a76c108e1de68ecc5ca442"
+  integrity sha512-nDvAIMDZUVD10eCzcqJMPGxor1WNUy+HZaMyIpIH1FNTyvcuPh5OdmTuI+s22TCYfQiqT7eikO3ko8WAXFKAdQ==
   dependencies:
     "@babel/runtime" "^7.15.3"
     adm-zip "^0.5.5"
