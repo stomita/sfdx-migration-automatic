@@ -6213,10 +6213,10 @@ safe-regex-test@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-salesforce-migration-app-pack@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-2.1.0.tgz#04ff5a69852608c1eae13ed3bc41383f9359310c"
-  integrity sha512-FaUUobnhVuHCowQ8VMTDINXSur6Ygx5sE2C3Qx8QVhmBrPV2vTjerYtA29IAiuDdGfiYWA/MjJ0+JZP3Oqz+4Q==
+salesforce-migration-app-pack@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-2.1.1.tgz#09438fe5554ce84fbf52090679476a6e04a6caf3"
+  integrity sha512-iO0FybOO47Rs2Hk4mlYGPm0PyXNeDQMR2SvNbeawCwD02PaPBkYBuxH0SqTpL4ImAJMZSS9q1qm52+6UE/kWgw==
   dependencies:
     "@babel/runtime" "^7.15.3"
     adm-zip "^0.5.16"

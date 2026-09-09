@@ -99,9 +99,10 @@ describe('package2', () => {
   });
 
   it('derives stable package prefix from package id', () => {
-    expect(getPackagePrefix('0Ho5g000000CaRXCA0')).to.equal(
-      'DataMigrationPack_5g000000CaRX',
-    );
+    const prefix = getPackagePrefix('0Ho5g000000CaRXCA0');
+    expect(prefix).to.equal('DMPack_5g000000CaRX');
+    // Visualforce page names are limited to 40 characters
+    expect(`${prefix}_CommanderPage`.length).to.be.at.most(40);
   });
 
   it('builds version info with descriptor and metadata package', () => {
@@ -154,6 +155,7 @@ describe('package2', () => {
     const request = created[1].record;
     expect(request.Package2Id).to.equal('0Ho000000000002AAA');
     expect(request.InstallKey).to.be.undefined;
+    expect(request.CalculateCodeCoverage).to.equal(true);
     const versionInfo = new AdmZip(Buffer.from(request.VersionInfo, 'base64'));
     const descriptor = JSON.parse(
       versionInfo.readAsText('package2-descriptor.json'),
@@ -163,9 +165,7 @@ describe('package2', () => {
     const metadata = new AdmZip(versionInfo.readFile('package.zip') as Buffer);
     const files = metadata.getEntries().map((e) => e.entryName);
     expect(files).to.include('package.xml');
-    expect(files).to.include(
-      'pages/DataMigrationPack_000000000002_CommanderPage.page',
-    );
+    expect(files).to.include('pages/DMPack_000000000002_CommanderPage.page');
     expect(updated).to.eql([
       {
         type: 'Package2Version',

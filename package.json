@@ -11,7 +11,7 @@
     "adm-zip": "^0.5.16",
     "fs-extra": "^11.3.0",
     "jsforce": "^3.10.0",
-    "salesforce-migration-app-pack": "^2.1.0",
+    "salesforce-migration-app-pack": "^2.1.1",
     "salesforce-migration-automatic": "^4.1.0",
     "tslib": "^2.8.1"
   },

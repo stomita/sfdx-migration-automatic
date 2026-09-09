@@ -43,9 +43,10 @@ function randid() {
 /**
  * Prefix of API names of the components in the package.
  * Derived from the package id so that every version of the package updates the same components.
+ * Kept short because Visualforce page names are limited to 40 characters.
  */
 export function getPackagePrefix(packageId: string) {
-  return `DataMigrationPack_${packageId.substring(3, 15)}`;
+  return `DMPack_${packageId.substring(3, 15)}`;
 }
 
 export function getInstallUrl(subscriberPackageVersionId: string) {
@@ -129,7 +130,8 @@ export async function createPackage2VersionCreateRequest(
       Package2Id: packageId,
       VersionInfo: versionInfo,
       InstallKey: installationKey,
-      CalculateCodeCoverage: false,
+      // required to promote the version, even when the package has no Apex
+      CalculateCodeCoverage: true,
       SkipValidation: false,
     });
   if (!ret.success) {
