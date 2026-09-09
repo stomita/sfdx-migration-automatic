@@ -2,22 +2,16 @@ import { expect, test } from '@salesforce/command/lib/test';
 import * as automig from 'salesforce-migration-automatic';
 import fs = require('fs-extra');
 
-import { EventEmitter } from 'events';
-
 describe('automig:dump', () => {
   const files: { [filepath: string]: string } = {};
   //
   const ts = test
     .withOrg({ username: 'test@example.org' }, true)
-    .stub(
-      automig,
-      'AutoMigrator',
-      <any>class AutoMigratorStub extends EventEmitter {
-        async dumpAsCSVData(queries: any) {
-          return queries.map(() => 'A,B\na1,b1\na2,b2');
-        }
-      },
-    )
+    .stub(automig.AutoMigrator.prototype, 'dumpAsCSVData', <any>(
+      async function dumpAsCSVDataStub(queries: any) {
+        return queries.map(() => 'A,B\na1,b1\na2,b2');
+      }
+    ))
     .stub(fs, 'readFile', <any>function readFileStub(filepath: string) {
       if (filepath === 'path/to/automig-dump-config.json') {
         return JSON.stringify({

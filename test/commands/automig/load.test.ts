@@ -2,28 +2,22 @@ import { expect, test } from '@salesforce/command/lib/test';
 import * as automig from 'salesforce-migration-automatic';
 import fs = require('fs-extra');
 
-import { EventEmitter } from 'events';
-
 describe('automig:load', () => {
   const files: { [filepath: string]: string } = {};
   //
   const ts = test
     .withOrg({ username: 'test@example.org' }, true)
-    .stub(
-      automig,
-      'AutoMigrator',
-      <any>class AutoMigratorStub extends EventEmitter {
-        async loadCSVData(_inputs: any, _options: any) {
-          return {
-            totalCount: 1,
-            successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
-            failures: [],
-            blocked: [],
-            idMap: new Map([['a001', 'a101']]),
-          };
-        }
-      },
-    )
+    .stub(automig.AutoMigrator.prototype, 'loadCSVData', <any>(
+      async function loadCSVDataStub(_inputs: any, _options: any) {
+        return {
+          totalCount: 1,
+          successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
+          failures: [],
+          blocked: [],
+          idMap: new Map([['a001', 'a101']]),
+        };
+      }
+    ))
     .stub(fs, 'readdir', <any>function readdirStub(dirpath: string) {
       if (dirpath === 'path/to/csv') {
         return ['Account.csv', 'Contact.csv'];
