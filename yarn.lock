@@ -613,6 +613,13 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
+"@types/adm-zip@^0.4.34":
+  version "0.4.34"
+  resolved "https://registry.yarnpkg.com/@types/adm-zip/-/adm-zip-0.4.34.tgz#62ac859eb2af6024362a1b3e43527ab79e0c624e"
+  integrity sha512-8ToYLLAYhkRfcmmljrKi22gT2pqu7hGMDtORP1emwIEGmgUTZOsaDjzWFzW5N2frcFRz/50CWt4zA1CxJ73pmQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/chai@*":
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.7.tgz#1b8e33b61a8c09cbe1f85133071baa0dbf9fa71a"
@@ -4295,10 +4302,10 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-salesforce-migration-app-pack@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-1.2.3.tgz#79d64831998cde8144a76c108e1de68ecc5ca442"
-  integrity sha512-nDvAIMDZUVD10eCzcqJMPGxor1WNUy+HZaMyIpIH1FNTyvcuPh5OdmTuI+s22TCYfQiqT7eikO3ko8WAXFKAdQ==
+salesforce-migration-app-pack@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/salesforce-migration-app-pack/-/salesforce-migration-app-pack-2.0.0.tgz#7f8ca11fb10eb2e9f02a64fd34815b260cbe3d30"
+  integrity sha512-2Sd3emQwpYlbVsefTMeNu/uae6zWjhITwMKoJ13rpM46gjedb56nPxE2x7wwMtEANs3u7lcuW2ODPh2iVFz9bg==
   dependencies:
     "@babel/runtime" "^7.15.3"
     adm-zip "^0.5.5"

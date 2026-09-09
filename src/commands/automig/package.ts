@@ -1,9 +1,7 @@
 import { core, flags, SfdxCommand } from '@salesforce/command';
 import { AnyJson } from '@salesforce/ts-types';
-import { Connection } from 'jsforce';
-import { createPackage } from 'salesforce-migration-app-pack';
 import { readLoadConfig, readUploadInputs } from '../../loadenv';
-import { asArray } from '../../util';
+import { createPackageVersion } from '../../package2';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -23,8 +21,9 @@ export default class Package extends SfdxCommand {
   }
 
   public static examples = [
-    '$ sfdx automig:package --targetusername username@example.com --inputdir ./data',
-    '$ sfdx automig:package --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName',
+    '$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data',
+    '$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName',
+    '$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX --versionnumber 1.1.0.NEXT',
   ];
 
   protected static flagsConfig = {
@@ -58,18 +57,39 @@ export default class Package extends SfdxCommand {
       char: 'n',
       description: messages.getMessage('defaultNamespaceFlagDescription'),
     }),
+    packageid: flags.id({
+      description: messages.getMessage('packageIdFlagDescription'),
+    }),
     packagename: flags.string({
       char: 'p',
       description: messages.getMessage('packageNameFlagDescription'),
     }),
-    verbose: flags.builtin(),
+    versionnumber: flags.string({
+      description: messages.getMessage('versionNumberFlagDescription'),
+      default: '1.0.0.NEXT',
+    }),
+    versionname: flags.string({
+      description: messages.getMessage('versionNameFlagDescription'),
+    }),
+    versiondescription: flags.string({
+      description: messages.getMessage('versionDescriptionFlagDescription'),
+    }),
+    installationkey: flags.string({
+      char: 'k',
+      description: messages.getMessage('installationKeyFlagDescription'),
+    }),
+    wait: flags.integer({
+      char: 'w',
+      description: messages.getMessage('waitFlagDescription'),
+      default: 10,
+    }),
   };
 
   // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
+  protected static requiresUsername = false;
 
   // Comment this out if your command does not support a hub org username
-  protected static supportsDevhubUsername = false;
+  protected static requiresDevhubUsername = true;
 
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
@@ -85,85 +105,41 @@ export default class Package extends SfdxCommand {
     // Read uploading inputs
     const inputs = await readUploadInputs(config, this.flags);
 
-    // Setup connection
-    if (!this.org) {
-      throw new Error('No connecting organization found');
+    // Setup connection to Dev Hub
+    if (!this.hubOrg) {
+      throw new Error('No Dev Hub organization found');
     }
-    const conn = this.org.getConnection();
-    await conn.request('/');
-    const { accessToken, instanceUrl } = conn;
+    const conn = this.hubOrg.getConnection();
     const defaultNamespace: string | undefined = this.flags.defaultnamespace;
-    const conn2 = new Connection({
-      accessToken,
-      instanceUrl,
-      version: this.flags.apiversion,
-      callOptions: defaultNamespace ? { defaultNamespace } : undefined,
-    });
-    this.ux.startSpinner('Creating Migration App Package');
-    const packageName: string | undefined = this.flags.packagename;
-    const res = await createPackage(conn2, {
-      inputs,
-      mappings: config.mappings,
-      options: { defaultNamespace },
-      packageName,
-    });
+    this.ux.startSpinner('Creating Unlocked Package Version');
+    const res = await createPackageVersion(
+      conn,
+      {
+        packageId: this.flags.packageid,
+        packageName: this.flags.packagename,
+        versionNumber: this.flags.versionnumber,
+        versionName: this.flags.versionname,
+        versionDescription: this.flags.versiondescription,
+        installationKey: this.flags.installationkey,
+        timeout: this.flags.wait * 60 * 1000,
+        build: {
+          inputs,
+          mappings: config.mappings,
+          options: { defaultNamespace },
+        },
+      },
+      (message) => this.ux.setSpinnerStatus(message),
+    );
     this.ux.stopSpinner();
     this.ux.log();
-    this.ux.log(`Status: ${res.status}`);
-    this.ux.log(`Success: ${res.success}`);
-    this.ux.log(`Done: ${res.done}`);
-    this.ux.log(`Number Component Errors: ${res.numberComponentErrors}`);
-    this.ux.log(`Number Components Deployed: ${res.numberComponentsDeployed}`);
-    this.ux.log(`Number Components Total: ${res.numberComponentsTotal}`);
-    this.ux.log(`Number Test Errors: ${res.numberTestErrors}`);
-    this.ux.log(`Number Tests Completed: ${res.numberTestsCompleted}`);
-    this.ux.log(`Number Tests Total: ${res.numberTestsTotal}`);
-
-    if (res.packageInfo?.Id) {
-      this.ux.log();
-      this.ux.log(`Deployed Package ID: ${res.packageInfo.Id}`);
-    }
-
-    const details: any = res.details;
-    if (details) {
-      this.logger.debug('details =>', details);
-      if (this.flags.verbose) {
-        this.ux.log();
-        const successes = asArray(details.componentFailures);
-        if (successes.length > 0) {
-          this.ux.log('Successes:');
-        }
-        for (const s of successes) {
-          const flag =
-            String(s.changed) === 'true'
-              ? '(M)'
-              : String(s.created) === 'true'
-              ? '(A)'
-              : String(s.deleted) === 'true'
-              ? '(D)'
-              : '(~)';
-          this.ux.log(
-            ` - ${flag} ${s.fileName}${
-              s.componentType ? `[${s.componentType}]` : ''
-            }`,
-          );
-        }
-      }
-      const failures = asArray(details.componentFailures);
-      if (failures && failures.length > 0) {
-        this.ux.log();
-        this.ux.log('Failures:');
-        for (const f of failures) {
-          this.ux.log(
-            ` - ${f.problemType} on ${f.fileName}${
-              typeof f.lineNumber !== 'undefined'
-                ? ` (${f.lineNumber}:${f.columnNumber})`
-                : ''
-            } : ${f.problem}`,
-          );
-        }
-      }
-    }
-    return res as AnyJson;
+    this.ux.log(`Package ID: ${res.packageId}`);
+    this.ux.log(`Package Name: ${res.packageName}`);
+    this.ux.log(`Package Version ID: ${res.packageVersionId}`);
+    this.ux.log(
+      `Subscriber Package Version ID: ${res.subscriberPackageVersionId}`,
+    );
+    this.ux.log(`Version Number: ${res.versionNumber}`);
+    this.ux.log(`Install URL: ${res.installUrl}`);
+    return res;
   }
 }

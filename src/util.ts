@@ -25,3 +25,7 @@ export function asArray<T>(arr: T | T[] | null | undefined): T[] {
   }
   return arr as T[];
 }
+
+export function delay(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}

@@ -1,5 +1,5 @@
 {
-  "commandDescription": "Bundle record data and one-click migration script as a Salesforce Package",
+  "commandDescription": "Bundle record data and one-click migration script as an unlocked package version in Dev Hub",
   "configFlagDescription": "load configuration file",
   "inputDirFlagDescription": "directory which includes input data files in CSV",
   "targetObjectsFlagDescription": "list of object names to include in loading",
@@ -7,5 +7,11 @@
   "mappingObjectsFlagDescription": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
   "ignoreFieldsFlagDescription": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
   "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages",
-  "packageNameFlagDescription": "package name to bundle record data and migration script"
+  "packageIdFlagDescription": "ID (starts with 0Ho) of the existing unlocked package in Dev Hub to add the version to. A new unlocked package is created when omitted",
+  "packageNameFlagDescription": "name of the unlocked package to create (ignored when --packageid is given)",
+  "versionNumberFlagDescription": "version number of the package version in major.minor.patch.build format. Use NEXT as the build number to take the next available one",
+  "versionNameFlagDescription": "name of the package version (defaults to the version number without the build number)",
+  "versionDescriptionFlagDescription": "description of the package version",
+  "installationKeyFlagDescription": "installation key for key-protected package. The package version is installable without a key when omitted",
+  "waitFlagDescription": "number of minutes to wait for the package version creation"
 }

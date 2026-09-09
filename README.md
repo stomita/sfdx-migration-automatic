@@ -90,7 +90,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.1.0/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/dump.ts)_
 
 ## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -151,11 +151,11 @@ EXAMPLES
   User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.1.0/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/load.ts)_
 
 ## `sfdx automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
-Bundle record data and one-click migration script as a Salesforce Package
+Bundle record data and one-click migration script as an unlocked package version in Dev Hub
 
 ```
 USAGE
@@ -168,6 +168,11 @@ OPTIONS
 
   -f, --config=config                                                               load configuration file
 
+  -k, --installationkey=installationkey                                             installation key for key-protected
+                                                                                    package. The package version is
+                                                                                    installable without a key when
+                                                                                    omitted
+
   -m, --mappingobjects=mappingobjects                                               list of object and key field name
                                                                                     pair to map to existing records
                                                                                     (e.g.
@@ -176,11 +181,16 @@ OPTIONS
   -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
                                                                                     managed packages
 
-  -p, --packagename=packagename                                                     package name to bundle record data
-                                                                                    and migration script
+  -p, --packagename=packagename                                                     name of the unlocked package to
+                                                                                    create (ignored when --packageid is
+                                                                                    given)
 
-  -u, --targetusername=targetusername                                               username or alias for the target
-                                                                                    org; overrides default target org
+  -v, --targetdevhubusername=targetdevhubusername                                   username or alias for the dev hub
+                                                                                    org; overrides default dev hub org
+
+  -w, --wait=wait                                                                   [default: 10] number of minutes to
+                                                                                    wait for the package version
+                                                                                    creation
 
   --apiversion=apiversion                                                           override the api version used for
                                                                                     api requests made by this command
@@ -198,19 +208,35 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
 
+  --packageid=packageid                                                             ID (starts with 0Ho) of the existing
+                                                                                    unlocked package in Dev Hub to add
+                                                                                    the version to. A new unlocked
+                                                                                    package is created when omitted
+
   --targetobjects=targetobjects                                                     list of object names to include in
                                                                                     loading
 
-  --verbose                                                                         emit additional command output to
-                                                                                    stdout
+  --versiondescription=versiondescription                                           description of the package version
+
+  --versionname=versionname                                                         name of the package version
+                                                                                    (defaults to the version number
+                                                                                    without the build number)
+
+  --versionnumber=versionnumber                                                     [default: 1.0.0.NEXT] version number
+                                                                                    of the package version in
+                                                                                    major.minor.patch.build format. Use
+                                                                                    NEXT as the build number to take the
+                                                                                    next available one
 
 EXAMPLES
-  $ sfdx automig:package --targetusername username@example.com --inputdir ./data
-  $ sfdx automig:package --targetusername username@example.com --inputdir ./data --mappingobjects 
+  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data
+  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --mappingobjects 
   User:Email,RecordType:DeveloperName
+  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX 
+  --versionnumber 1.1.0.NEXT
 ```
 
-_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.1.0/src/commands/automig/package.ts)_
+_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/package.ts)_
 <!-- commandsstop -->
 
 ## Configuration

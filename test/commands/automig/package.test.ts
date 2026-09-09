@@ -1,28 +1,25 @@
 import { expect, test } from '@salesforce/command/lib/test';
-import * as apppack from 'salesforce-migration-app-pack';
 import * as fs from 'fs-extra';
+import * as package2 from '../../../src/package2';
 
 describe('automig:package', () => {
-  const files: { [filepath: string]: string } = {};
+  let params: package2.CreatePackageVersionParams | undefined;
   //
   const ts = test
-    .withOrg({ username: 'test@example.org' }, true)
-    .stub(apppack, 'createPackage', async function createPackage(
-      _inputs: any,
-      _options: any,
+    .withOrg({ username: 'devhub@example.org', isDevHub: true }, true)
+    .stub(package2, 'createPackageVersion', async function createPackageVersion(
+      _conn: any,
+      params_: package2.CreatePackageVersionParams,
     ) {
+      params = params_;
       return {
-        id: 'p1234567',
-        status: 'Succeeded',
-        success: true,
-        done: true,
-        numberComponentErrors: 0,
-        numberComponentsDeployed: 2,
-        numberComponentsTotal: 2,
-        numberTestErrors: 0,
-        numberTestsCompleted: 0,
-        numberTestsTotal: 0,
-        packageInfo: { Id: 'p000001' },
+        packageId: '0Ho000000000001AAA',
+        packageName: 'Data Migration Pack (test)',
+        packageVersionId: '05i000000000001AAA',
+        subscriberPackageVersionId: '04t000000000001AAA',
+        versionNumber: '1.0.0.1',
+        installUrl:
+          'https://login.salesforce.com/packaging/installPackage.apexp?p0=04t000000000001AAA',
       };
     })
     .stub(fs, 'readdir', function readdirStub(dirpath: string) {
@@ -60,12 +57,6 @@ describe('automig:package', () => {
           throw new Error('file not found: ' + filepath);
       }
     })
-    .stub(fs, 'outputFile', function outputFileStub(
-      filepath: string,
-      data: string,
-    ) {
-      files[filepath] = data;
-    })
     .stub(fs, 'existsSync', function existsSync(filepath: string) {
       switch (filepath) {
         case 'path/to/csv/Account.csv':
@@ -79,13 +70,27 @@ describe('automig:package', () => {
     })
     .stdout();
 
+  beforeEach(() => {
+    params = undefined;
+  });
+
   /**
    *
    */
   ts.command(['automig:package', '--inputdir', 'path/to/csv']).it(
     'runs automig:package --inputdir path/to/csv',
     (ctx) => {
-      expect(ctx.stdout).includes('Succeeded');
+      expect(ctx.stdout).includes('Package Version ID: 05i000000000001AAA');
+      expect(ctx.stdout).includes(
+        'Install URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04t000000000001AAA',
+      );
+      expect(params?.packageId).to.be.undefined;
+      expect(params?.versionNumber).to.equal('1.0.0.NEXT');
+      expect(params?.timeout).to.equal(10 * 60 * 1000);
+      expect(params?.build.inputs.map((input) => input.object)).to.eql([
+        'Account',
+        'Contact',
+      ]);
     },
   );
 
@@ -101,7 +106,11 @@ describe('automig:package', () => {
   ]).it(
     'runs automig:package --inputdir path/to/csv --mappingobjects User:Email,RecordType:DeveloperName',
     (ctx) => {
-      expect(ctx.stdout).includes('Succeeded');
+      expect(ctx.stdout).includes('Package Version ID: 05i000000000001AAA');
+      expect(params?.build.mappings).to.eql([
+        { object: 'User', keyField: 'Email' },
+        { object: 'RecordType', keyField: 'DeveloperName' },
+      ]);
     },
   );
 
@@ -115,7 +124,50 @@ describe('automig:package', () => {
   ]).it(
     'runs automig:package --config path/to/automig-load-config.json',
     (ctx) => {
-      expect(ctx.stdout).includes('Succeeded');
+      expect(ctx.stdout).includes('Package Version ID: 05i000000000001AAA');
+      expect(params?.build.inputs.map((input) => input.object)).to.eql([
+        'Account',
+      ]);
+    },
+  );
+
+  /**
+   *
+   */
+  ts.command([
+    'automig:package',
+    '--inputdir',
+    'path/to/csv',
+    '--packageid',
+    '0Ho000000000001AAA',
+    '--versionnumber',
+    '1.2.0.NEXT',
+    '--versionname',
+    'Summer',
+    '--installationkey',
+    'secret',
+    '--wait',
+    '30',
+  ]).it('runs automig:package with package version options', (ctx) => {
+    expect(ctx.stdout).includes('Package ID: 0Ho000000000001AAA');
+    expect(params?.packageId).to.equal('0Ho000000000001AAA');
+    expect(params?.versionNumber).to.equal('1.2.0.NEXT');
+    expect(params?.versionName).to.equal('Summer');
+    expect(params?.installationKey).to.equal('secret');
+    expect(params?.timeout).to.equal(30 * 60 * 1000);
+  });
+
+  /**
+   *
+   */
+  ts.command(['automig:package', '--inputdir', 'path/to/csv', '--json']).it(
+    'runs automig:package --inputdir path/to/csv --json',
+    (ctx) => {
+      const output = JSON.parse(ctx.stdout);
+      expect(output.status).to.equal(0);
+      expect(output.result.subscriberPackageVersionId).to.equal(
+        '04t000000000001AAA',
+      );
     },
   );
 });
