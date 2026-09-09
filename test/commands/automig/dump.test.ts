@@ -54,10 +54,14 @@ describe('automig:dump', () => {
       expect(ctx.stdout).includes('path/to/dir/Contact.csv');
       for (const filepath of [
         'path/to/dir/Account.csv',
-        'path/to/dir/Account.csv',
+        'path/to/dir/Contact.csv',
       ]) {
         expect(files[filepath]).is.not.empty;
       }
+      expect(ctx.stdout).includes('path/to/dir/automig-meta.json');
+      const meta = JSON.parse(files['path/to/dir/automig-meta.json']);
+      expect(meta.baseDate).to.match(/^\d{4}-\d{2}-\d{2}$/);
+      expect(meta.dumpedAt).to.match(/^\d{4}-\d{2}-\d{2}T/);
     },
   );
 

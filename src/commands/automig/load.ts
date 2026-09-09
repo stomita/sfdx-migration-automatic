@@ -3,8 +3,16 @@ import { Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import { readFile, outputFile, existsSync } from 'fs-extra';
 import { Connection } from 'jsforce';
-import { AutoMigrator } from 'salesforce-migration-automatic';
-import { readLoadConfig, readUploadInputs } from '../../loadenv';
+import {
+  AutoMigrator,
+  calcDateShiftDays,
+  formatLocalDate,
+} from 'salesforce-migration-automatic';
+import {
+  readDateShiftOptions,
+  readLoadConfig,
+  readUploadInputs,
+} from '../../loadenv';
 import {
   convertMapToObjectLiteral,
   convertObjectLiteralToMap,
@@ -74,6 +82,17 @@ export default class Load extends SfdxCommand {
       char: 'i',
       description: messages.getMessage('idMapFlagDescription'),
     }),
+    shiftdates: flags.boolean({
+      description: messages.getMessage('shiftDatesFlagDescription'),
+    }),
+    basedate: flags.string({
+      description: messages.getMessage('baseDateFlagDescription'),
+      dependsOn: ['shiftdates'],
+    }),
+    targetdate: flags.string({
+      description: messages.getMessage('targetDateFlagDescription'),
+      dependsOn: ['shiftdates'],
+    }),
     verbose: flags.builtin(),
   };
 
@@ -96,6 +115,15 @@ export default class Load extends SfdxCommand {
 
     // Read uploading inputs
     const inputs = await readUploadInputs(config, this.flags);
+
+    // Resolve date shift
+    const dateShift = await readDateShiftOptions(config, this.flags);
+    if (dateShift) {
+      const days = calcDateShiftDays(dateShift);
+      this.ux.log(
+        `Date shift: ${days >= 0 ? '+' : ''}${days} days (from ${dateShift.baseDate} to ${dateShift.targetDate ?? formatLocalDate(new Date())})`,
+      );
+    }
 
     // Setup connection
     if (!this.org) {
@@ -166,6 +194,7 @@ export default class Load extends SfdxCommand {
     const status = await am.loadCSVData(inputs, config.mappings, {
       defaultNamespace,
       idMap,
+      dateShift,
     });
     this.ux.stopSpinner();
     this.ux.log();

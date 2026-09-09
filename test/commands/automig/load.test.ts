@@ -4,11 +4,17 @@ import fs = require('fs-extra');
 
 describe('automig:load', () => {
   const files: { [filepath: string]: string } = {};
+  let loadOptions: automig.UploadOptions | undefined;
   //
   const ts = test
     .withOrg({ username: 'test@example.org' }, true)
     .stub(automig.AutoMigrator.prototype, 'loadCSVData', <any>(
-      async function loadCSVDataStub(_inputs: any, _options: any) {
+      async function loadCSVDataStub(
+        _inputs: any,
+        _mappings: any,
+        options: automig.UploadOptions,
+      ) {
+        loadOptions = options;
         return {
           totalCount: 1,
           successes: [{ object: 'Account', origId: 'a001', newId: 'a101' }],
@@ -33,6 +39,11 @@ describe('automig:load', () => {
           return `Id,AccountId\nc001,a001\nc002,a001\nc003,a002\nc004,a002\nc005,a002`;
         case 'path/to/idmap.json':
           return `{"a001": "a101"}`;
+        case 'path/to/csv/automig-meta.json':
+          return JSON.stringify({
+            baseDate: '2026-01-01',
+            dumpedAt: '2026-01-01T03:00:00.000Z',
+          });
         case 'path/to/automig-load-config.json':
           return JSON.stringify({
             inputDir: './csv',
@@ -66,6 +77,7 @@ describe('automig:load', () => {
         case 'path/to/csv/Contact.csv':
         case 'path/to/idmap.json':
         case 'path/to/automig-load-config.json':
+        case 'path/to/csv/automig-meta.json':
           return true;
         default:
           return false;
@@ -136,6 +148,76 @@ describe('automig:load', () => {
     'runs automig:load --config path/to/automig-load-config.json',
     (ctx) => {
       expect(ctx.stdout).includes('Successes: 1');
+      expect(loadOptions?.dateShift).to.be.undefined;
+    },
+  );
+
+  /**
+   *
+   */
+  ts.command([
+    'automig:load',
+    '--targetusername',
+    'test@example.org',
+    '--inputdir',
+    'path/to/csv',
+    '--shiftdates',
+  ]).it(
+    'runs automig:load --inputdir path/to/csv --shiftdates using the dump date in automig-meta.json',
+    (ctx) => {
+      expect(ctx.stdout).includes('Date shift: ');
+      expect(ctx.stdout).includes('from 2026-01-01 to ');
+      expect(loadOptions?.dateShift).to.eql({
+        baseDate: '2026-01-01',
+        targetDate: undefined,
+      });
+    },
+  );
+
+  /**
+   *
+   */
+  ts.command([
+    'automig:load',
+    '--targetusername',
+    'test@example.org',
+    '--inputdir',
+    'path/to/csv',
+    '--shiftdates',
+    '--basedate',
+    '2026-02-01',
+    '--targetdate',
+    '2026-03-03',
+  ]).it(
+    'runs automig:load --inputdir path/to/csv --shiftdates --basedate 2026-02-01 --targetdate 2026-03-03',
+    (ctx) => {
+      expect(ctx.stdout).includes(
+        'Date shift: +30 days (from 2026-02-01 to 2026-03-03)',
+      );
+      expect(loadOptions?.dateShift).to.eql({
+        baseDate: '2026-02-01',
+        targetDate: '2026-03-03',
+      });
+    },
+  );
+
+  /**
+   *
+   */
+  ts.command([
+    'automig:load',
+    '--targetusername',
+    'test@example.org',
+    '--inputdir',
+    'path/to/nometa',
+    '--shiftdates',
+    '--json',
+  ]).it(
+    'fails automig:load --shiftdates when no base date is available',
+    (ctx) => {
+      const output = JSON.parse(ctx.stdout);
+      expect(output.status).to.equal(1);
+      expect(output.message).includes('No base date found');
     },
   );
 });

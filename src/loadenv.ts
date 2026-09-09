@@ -2,9 +2,11 @@ import { readdir, readFile } from 'fs-extra';
 import * as path from 'path';
 import { SfdxCommand } from '@salesforce/command';
 import {
+  DateShiftOptions,
   RecordMappingPolicy,
   UploadInput,
 } from 'salesforce-migration-automatic';
+import { META_FILENAME, readDumpMeta } from './meta';
 import { toStringList } from './util';
 
 export type LoadConfig = {
@@ -118,4 +120,28 @@ export async function readUploadInputs(
     }
   }
   return inputs;
+}
+
+/**
+ * Resolve date shift options from --shiftdates, --basedate, --targetdate flags.
+ * The base date defaults to the one recorded by automig:dump in the input directory.
+ */
+export async function readDateShiftOptions(
+  config: LoadConfig,
+  flags: SfdxCommand['flags'],
+): Promise<DateShiftOptions | undefined> {
+  if (!flags.shiftdates) {
+    return undefined;
+  }
+  let baseDate: string | undefined = flags.basedate;
+  if (!baseDate) {
+    const meta = await readDumpMeta(config.inputDir);
+    baseDate = meta?.baseDate;
+  }
+  if (!baseDate) {
+    throw new Error(
+      `No base date found for shifting dates. Dump data with automig:dump to create ${META_FILENAME} in the input directory, or specify --basedate`,
+    );
+  }
+  return { baseDate, targetDate: flags.targetdate };
 }

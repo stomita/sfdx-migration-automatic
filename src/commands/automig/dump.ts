@@ -8,7 +8,9 @@ import {
   AutoMigrator,
   DumpProgress,
   DumpQuery,
+  formatLocalDate,
 } from 'salesforce-migration-automatic';
+import { writeDumpMeta } from '../../meta';
 import { convertObjectLiteralToMap, toStringList } from '../../util';
 
 // Initialize Messages with the current plugin directory
@@ -204,11 +206,18 @@ export default class Dump extends SfdxCommand {
         return { filepath, count };
       }),
     );
+    const now = new Date();
+    const metaFilePath = await writeDumpMeta(config.outputDir, {
+      baseDate: formatLocalDate(now),
+      dumpedAt: now.toISOString(),
+    });
     this.ux.log();
     this.ux.table(results, {
       filepath: { header: 'Output File Path' },
       count: { header: 'Count' },
     });
-    return { fetchedCount, results };
+    this.ux.log();
+    this.ux.log(`Meta File Path: ${metaFilePath}`);
+    return { fetchedCount, results, metaFilePath };
   }
 }

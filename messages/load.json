@@ -8,5 +8,8 @@
   "mappingObjectsFlagDescription": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
   "ignoreFieldsFlagDescription": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
   "defaultNamespaceFlagDescription": "developer namespace prefix for managed packages",
-  "deleteBeforeLoadFlagDescription": "delete all records in target objects before loading"
+  "deleteBeforeLoadFlagDescription": "delete all records in target objects before loading",
+  "shiftDatesFlagDescription": "shift date and datetime field values by the days between the base date and the target date",
+  "baseDateFlagDescription": "base date (YYYY-MM-DD) of the data to shift from (default: the dump date recorded in automig-meta.json in the input directory)",
+  "targetDateFlagDescription": "target date (YYYY-MM-DD) to shift the data to (default: today)"
 }

@@ -37,6 +37,11 @@ describe('automig:package', () => {
           return `Id,ParentId\na001,\na002,a001`;
         case 'path/to/csv/Contact.csv':
           return `Id,AccountId\nc001,a001\nc002,a001\nc003,a002\nc004,a002\nc005,a002`;
+        case 'path/to/csv/automig-meta.json':
+          return JSON.stringify({
+            baseDate: '2026-01-01',
+            dumpedAt: '2026-01-01T03:00:00.000Z',
+          });
         case 'path/to/automig-load-config.json':
           return JSON.stringify({
             inputDir: './csv',
@@ -65,6 +70,7 @@ describe('automig:package', () => {
         case 'path/to/csv/Contact.csv':
         case 'path/to/idmap.json':
         case 'path/to/automig-load-config.json':
+        case 'path/to/csv/automig-meta.json':
           return true;
         default:
           return false;
@@ -166,6 +172,24 @@ describe('automig:package', () => {
     expect(params?.versionName).to.equal('Summer');
     expect(params?.installationKey).to.equal('secret');
     expect(params?.timeout).to.equal(30 * 60 * 1000);
+  });
+
+  /**
+   *
+   */
+  ts.command([
+    'automig:package',
+    '--targetdevhubusername',
+    'devhub@example.org',
+    '--inputdir',
+    'path/to/csv',
+    '--shiftdates',
+  ]).it('runs automig:package --inputdir path/to/csv --shiftdates', (ctx) => {
+    expect(ctx.stdout).includes('Package Version ID: 05i000000000001AAA');
+    expect(params?.build.options?.dateShift).to.eql({
+      baseDate: '2026-01-01',
+      targetDate: undefined,
+    });
   });
 
   /**

@@ -13,5 +13,7 @@
   "versionNameFlagDescription": "name of the package version (defaults to the version number without the build number)",
   "versionDescriptionFlagDescription": "description of the package version",
   "installationKeyFlagDescription": "installation key for key-protected package. The package version is installable without a key when omitted",
-  "waitFlagDescription": "number of minutes to wait for the package version creation"
+  "waitFlagDescription": "number of minutes to wait for the package version creation",
+  "shiftDatesFlagDescription": "shift date and datetime field values on load by the days between the base date and the date the package is loaded",
+  "baseDateFlagDescription": "base date (YYYY-MM-DD) of the data to shift from (default: the dump date recorded in automig-meta.json in the input directory)"
 }

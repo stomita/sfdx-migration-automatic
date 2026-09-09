@@ -105,6 +105,10 @@ FLAGS
                                                                                     org; overrides default target org
   --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
+  --basedate=<value>                                                                base date (YYYY-MM-DD) of the data
+                                                                                    to shift from (default: the dump
+                                                                                    date recorded in automig-meta.json
+                                                                                    in the input directory)
   --deletebeforeload                                                                delete all records in target objects
                                                                                     before loading
   --ignorefields=<value>                                                            list of object.field path to exclude
@@ -115,6 +119,11 @@ FLAGS
   --json                                                                            format output as json
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
+  --shiftdates                                                                      shift date and datetime field values
+                                                                                    by the days between the base date
+                                                                                    and the target date
+  --targetdate=<value>                                                              target date (YYYY-MM-DD) to shift
+                                                                                    the data to (default: today)
   --targetobjects=<value>                                                           list of object names to include in
                                                                                     loading
   --verbose                                                                         emit additional command output to
@@ -164,6 +173,10 @@ FLAGS
                                                                                     creation
   --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
+  --basedate=<value>                                                                base date (YYYY-MM-DD) of the data
+                                                                                    to shift from (default: the dump
+                                                                                    date recorded in automig-meta.json
+                                                                                    in the input directory)
   --ignorefields=<value>                                                            list of object.field path to exclude
                                                                                     from loading (e.g. Account.OwnerId,O
                                                                                     pportunityLineItem.TotalPrice)
@@ -176,6 +189,10 @@ FLAGS
                                                                                     unlocked package in Dev Hub to add
                                                                                     the version to. A new unlocked
                                                                                     package is created when omitted
+  --shiftdates                                                                      shift date and datetime field values
+                                                                                    on load by the days between the base
+                                                                                    date and the date the package is
+                                                                                    loaded
   --targetobjects=<value>                                                           list of object names to include in
                                                                                     loading
   --versiondescription=<value>                                                      description of the package version

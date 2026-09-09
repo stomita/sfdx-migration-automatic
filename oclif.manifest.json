@@ -319,6 +319,30 @@
           "description": "id map file",
           "multiple": false
         },
+        "shiftdates": {
+          "name": "shiftdates",
+          "type": "boolean",
+          "description": "shift date and datetime field values by the days between the base date and the target date",
+          "allowNo": false
+        },
+        "basedate": {
+          "name": "basedate",
+          "type": "option",
+          "description": "base date (YYYY-MM-DD) of the data to shift from (default: the dump date recorded in automig-meta.json in the input directory)",
+          "multiple": false,
+          "dependsOn": [
+            "shiftdates"
+          ]
+        },
+        "targetdate": {
+          "name": "targetdate",
+          "type": "option",
+          "description": "target date (YYYY-MM-DD) to shift the data to (default: today)",
+          "multiple": false,
+          "dependsOn": [
+            "shiftdates"
+          ]
+        },
         "verbose": {
           "name": "verbose",
           "type": "boolean",
@@ -391,6 +415,32 @@
           "kind": "filepath",
           "char": "i",
           "description": "id map file",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "shiftdates": {
+          "kind": "boolean",
+          "description": "shift date and datetime field values by the days between the base date and the target date",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "basedate": {
+          "kind": "string",
+          "description": "base date (YYYY-MM-DD) of the data to shift from (default: the dump date recorded in automig-meta.json in the input directory)",
+          "dependsOn": [
+            "shiftdates"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "targetdate": {
+          "kind": "string",
+          "description": "target date (YYYY-MM-DD) to shift the data to (default: today)",
+          "dependsOn": [
+            "shiftdates"
+          ],
           "input": [],
           "multiple": false,
           "type": "option"
@@ -511,6 +561,21 @@
           "description": "developer namespace prefix for managed packages",
           "multiple": false
         },
+        "shiftdates": {
+          "name": "shiftdates",
+          "type": "boolean",
+          "description": "shift date and datetime field values on load by the days between the base date and the date the package is loaded",
+          "allowNo": false
+        },
+        "basedate": {
+          "name": "basedate",
+          "type": "option",
+          "description": "base date (YYYY-MM-DD) of the data to shift from (default: the dump date recorded in automig-meta.json in the input directory)",
+          "multiple": false,
+          "dependsOn": [
+            "shiftdates"
+          ]
+        },
         "packageid": {
           "name": "packageid",
           "type": "option",
@@ -610,6 +675,22 @@
           "kind": "string",
           "char": "n",
           "description": "developer namespace prefix for managed packages",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "shiftdates": {
+          "kind": "boolean",
+          "description": "shift date and datetime field values on load by the days between the base date and the date the package is loaded",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "basedate": {
+          "kind": "string",
+          "description": "base date (YYYY-MM-DD) of the data to shift from (default: the dump date recorded in automig-meta.json in the input directory)",
+          "dependsOn": [
+            "shiftdates"
+          ],
           "input": [],
           "multiple": false,
           "type": "option"

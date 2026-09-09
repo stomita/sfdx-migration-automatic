@@ -1,7 +1,11 @@
 import { flags, SfdxCommand } from '@salesforce/command';
 import { Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
-import { readLoadConfig, readUploadInputs } from '../../loadenv';
+import {
+  readDateShiftOptions,
+  readLoadConfig,
+  readUploadInputs,
+} from '../../loadenv';
 import { createPackageVersion } from '../../package2';
 
 // Initialize Messages with the current plugin directory
@@ -55,6 +59,13 @@ export default class Package extends SfdxCommand {
       char: 'n',
       description: messages.getMessage('defaultNamespaceFlagDescription'),
     }),
+    shiftdates: flags.boolean({
+      description: messages.getMessage('shiftDatesFlagDescription'),
+    }),
+    basedate: flags.string({
+      description: messages.getMessage('baseDateFlagDescription'),
+      dependsOn: ['shiftdates'],
+    }),
     packageid: flags.id({
       description: messages.getMessage('packageIdFlagDescription'),
     }),
@@ -103,6 +114,9 @@ export default class Package extends SfdxCommand {
     // Read uploading inputs
     const inputs = await readUploadInputs(config, this.flags);
 
+    // Resolve date shift (dates are shifted to the date the package is loaded)
+    const dateShift = await readDateShiftOptions(config, this.flags);
+
     // Setup connection to Dev Hub
     if (!this.hubOrg) {
       throw new Error('No Dev Hub organization found');
@@ -123,7 +137,7 @@ export default class Package extends SfdxCommand {
         build: {
           inputs,
           mappings: config.mappings,
-          options: { defaultNamespace },
+          options: { defaultNamespace, dateShift },
         },
       },
       (message) => this.ux.setSpinnerStatus(message),
