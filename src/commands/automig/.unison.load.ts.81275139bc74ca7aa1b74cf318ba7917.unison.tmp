@@ -1,5 +1,4 @@
-import { flags, SfdxCommand } from '@salesforce/command';
-import { Messages } from '@salesforce/core';
+import { core, flags, SfdxCommand } from '@salesforce/command';
 import { AnyJson } from '@salesforce/ts-types';
 import { readFile, outputFile, existsSync } from 'fs-extra';
 import { Connection } from 'jsforce';
@@ -18,11 +17,11 @@ function removeNamespace(identifier: string) {
 }
 
 // Initialize Messages with the current plugin directory
-Messages.importMessagesDirectory(__dirname);
+core.Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = Messages.loadMessages('sfdx-migration-automatic', 'load');
+const messages = core.Messages.loadMessages('sfdx-migration-automatic', 'load');
 
 export default class Load extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
@@ -106,7 +105,7 @@ export default class Load extends SfdxCommand {
     const { accessToken, instanceUrl } = conn;
     const defaultNamespace: string | undefined = this.flags.defaultnamespace;
     const conn2 = new Connection({
-      accessToken: accessToken ?? undefined,
+      accessToken,
       instanceUrl,
       version: this.flags.apiversion,
       callOptions: defaultNamespace ? { defaultNamespace } : undefined,
@@ -180,9 +179,20 @@ export default class Load extends SfdxCommand {
       this.ux.log('Success Results:');
       this.ux.log();
       this.ux.table(status.successes, {
-        object: { header: 'Object' },
-        origId: { header: 'Original ID' },
-        newId: { header: 'New ID' },
+        columns: [
+          {
+            key: 'object',
+            label: 'Object',
+          },
+          {
+            key: 'origId',
+            label: 'Original ID',
+          },
+          {
+            key: 'newId',
+            label: 'New ID',
+          },
+        ],
       });
     }
     if (status.failures.length > 0) {
@@ -207,9 +217,20 @@ export default class Load extends SfdxCommand {
           };
         }),
         {
-          object: { header: 'Object' },
-          origId: { header: 'Original ID' },
-          error: { header: 'Error Message' },
+          columns: [
+            {
+              key: 'object',
+              label: 'Object',
+            },
+            {
+              key: 'origId',
+              label: 'Original ID',
+            },
+            {
+              key: 'error',
+              label: 'Error Message',
+            },
+          ],
         },
       );
     }
@@ -227,10 +248,24 @@ export default class Load extends SfdxCommand {
       this.ux.log('Blocked Inputs:');
       this.ux.log();
       this.ux.table(status.blocked, {
-        object: { header: 'Object' },
-        origId: { header: 'Original ID' },
-        blockingField: { header: 'Blocking Reference' },
-        blockingId: { header: 'Reference ID' },
+        columns: [
+          {
+            key: 'object',
+            label: 'Object',
+          },
+          {
+            key: 'origId',
+            label: 'Original ID',
+          },
+          {
+            key: 'blockingField',
+            label: 'Blocking Reference',
+          },
+          {
+            key: 'blockingId',
+            label: 'Reference ID',
+          },
+        ],
       });
     }
 

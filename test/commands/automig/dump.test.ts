@@ -1,6 +1,6 @@
 import { expect, test } from '@salesforce/command/lib/test';
 import * as automig from 'salesforce-migration-automatic';
-import * as fs from 'fs-extra';
+import fs = require('fs-extra');
 
 import { EventEmitter } from 'events';
 
@@ -12,13 +12,13 @@ describe('automig:dump', () => {
     .stub(
       automig,
       'AutoMigrator',
-      class AutoMigratorStub extends EventEmitter {
+      <any>class AutoMigratorStub extends EventEmitter {
         async dumpAsCSVData(queries: any) {
           return queries.map(() => 'A,B\na1,b1\na2,b2');
         }
       },
     )
-    .stub(fs, 'readFile', function readFileStub(filepath: string) {
+    .stub(fs, 'readFile', <any>function readFileStub(filepath: string) {
       if (filepath === 'path/to/automig-dump-config.json') {
         return JSON.stringify({
           outputDir: 'dist',
@@ -35,12 +35,11 @@ describe('automig:dump', () => {
         throw new Error('file not found: ' + filepath);
       }
     })
-    .stub(fs, 'outputFile', function outputFileStub(
-      filepath: string,
-      data: any,
-    ) {
-      files[filepath] = data;
-    })
+    .stub(fs, 'outputFile', <any>(
+      function outputFileStub(filepath: string, data: any) {
+        files[filepath] = data;
+      }
+    ))
     .stdout();
 
   /**
@@ -48,6 +47,8 @@ describe('automig:dump', () => {
    */
   ts.command([
     'automig:dump',
+    '--targetusername',
+    'test@example.org',
     '--objects',
     'Account,Contact',
     '--outputdir',
@@ -71,6 +72,8 @@ describe('automig:dump', () => {
    */
   ts.command([
     'automig:dump',
+    '--targetusername',
+    'test@example.org',
     '--config',
     'path/to/automig-dump-config.json',
   ]).it(

@@ -1,1 +1,677 @@
-{"version":"4.2.3","commands":{"automig:dump":{"id":"automig:dump","description":"Dump records in Salesforce org to CSV files for migration usage","usage":"automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]","pluginName":"sfdx-migration-automatic","pluginType":"core","aliases":[],"examples":["$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump","$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json"],"flags":{"json":{"name":"json","type":"boolean","description":"format output as json","allowNo":false},"loglevel":{"name":"loglevel","type":"option","description":"logging level for this command invocation","required":false,"helpValue":"(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)","options":["trace","debug","info","warn","error","fatal","TRACE","DEBUG","INFO","WARN","ERROR","FATAL"],"default":"warn"},"targetusername":{"name":"targetusername","type":"option","char":"u","description":"username or alias for the target org; overrides default target org"},"apiversion":{"name":"apiversion","type":"option","description":"override the api version used for api requests made by this command"},"config":{"name":"config","type":"option","char":"f","description":"dump configuration file"},"objects":{"name":"objects","type":"option","char":"o","description":"object names to dump, optionally paired with target scope (e.g. Account,Contact,User:related)"},"outputdir":{"name":"outputdir","type":"option","char":"d","description":"output directory for dumped CSV files"},"defaultnamespace":{"name":"defaultnamespace","type":"option","char":"n","description":"developer namespace prefix for managed packages"},"excludebom":{"name":"excludebom","type":"boolean","description":"do not prepend byte order mark (\\ufeff) in output files","allowNo":false},"ignorefields":{"name":"ignorefields","type":"option","description":"list of object.field path to exclude from dumping (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)"},"ignoresystemdate":{"name":"ignoresystemdate","type":"boolean","description":"exclude system-defined date fields from the dump target (e.g. CreatedDate, LastModifiedDate)","allowNo":false},"ignorereadonly":{"name":"ignorereadonly","type":"boolean","description":"exclude non-createable fields from the dump target","allowNo":false},"idmap":{"name":"idmap","type":"option","char":"i","description":"id map file"},"verbose":{"name":"verbose","type":"boolean","description":"emit additional command output to stdout","allowNo":false}},"args":[]},"automig:load":{"id":"automig:load","description":"Load records from CSV files to Salesforce org, resolving relationships between records","usage":"automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]","pluginName":"sfdx-migration-automatic","pluginType":"core","aliases":[],"examples":["$ sfdx automig:load --targetusername username@example.com --inputdir ./data","$ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName"],"flags":{"json":{"name":"json","type":"boolean","description":"format output as json","allowNo":false},"loglevel":{"name":"loglevel","type":"option","description":"logging level for this command invocation","required":false,"helpValue":"(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)","options":["trace","debug","info","warn","error","fatal","TRACE","DEBUG","INFO","WARN","ERROR","FATAL"],"default":"warn"},"targetusername":{"name":"targetusername","type":"option","char":"u","description":"username or alias for the target org; overrides default target org"},"apiversion":{"name":"apiversion","type":"option","description":"override the api version used for api requests made by this command"},"config":{"name":"config","type":"option","char":"f","description":"load configuration file"},"inputdir":{"name":"inputdir","type":"option","char":"d","description":"directory which includes input data files in CSV"},"targetobjects":{"name":"targetobjects","type":"option","description":"list of object names to include in loading"},"ignoreobjects":{"name":"ignoreobjects","type":"option","description":"list of object names to exclude from loading"},"mappingobjects":{"name":"mappingobjects","type":"option","char":"m","description":"list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName"},"ignorefields":{"name":"ignorefields","type":"option","description":"list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)"},"defaultnamespace":{"name":"defaultnamespace","type":"option","char":"n","description":"developer namespace prefix for managed packages"},"deletebeforeload":{"name":"deletebeforeload","type":"boolean","description":"delete all records in target objects before loading","allowNo":false},"idmap":{"name":"idmap","type":"option","char":"i","description":"id map file"},"verbose":{"name":"verbose","type":"boolean","description":"emit additional command output to stdout","allowNo":false}},"args":[]},"automig:package":{"id":"automig:package","description":"Bundle record data and one-click migration script as an unlocked package version in Dev Hub","usage":"automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]","pluginName":"sfdx-migration-automatic","pluginType":"core","aliases":[],"examples":["$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data","$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName","$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX --versionnumber 1.1.0.NEXT"],"flags":{"json":{"name":"json","type":"boolean","description":"format output as json","allowNo":false},"loglevel":{"name":"loglevel","type":"option","description":"logging level for this command invocation","required":false,"helpValue":"(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)","options":["trace","debug","info","warn","error","fatal","TRACE","DEBUG","INFO","WARN","ERROR","FATAL"],"default":"warn"},"targetdevhubusername":{"name":"targetdevhubusername","type":"option","char":"v","description":"username or alias for the dev hub org; overrides default dev hub org"},"apiversion":{"name":"apiversion","type":"option","description":"override the api version used for api requests made by this command"},"config":{"name":"config","type":"option","char":"f","description":"load configuration file"},"inputdir":{"name":"inputdir","type":"option","char":"d","description":"directory which includes input data files in CSV"},"targetobjects":{"name":"targetobjects","type":"option","description":"list of object names to include in loading"},"ignoreobjects":{"name":"ignoreobjects","type":"option","description":"list of object names to exclude from loading"},"mappingobjects":{"name":"mappingobjects","type":"option","char":"m","description":"list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName"},"ignorefields":{"name":"ignorefields","type":"option","description":"list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)"},"defaultnamespace":{"name":"defaultnamespace","type":"option","char":"n","description":"developer namespace prefix for managed packages"},"packageid":{"name":"packageid","type":"option","description":"ID (starts with 0Ho) of the existing unlocked package in Dev Hub to add the version to. A new unlocked package is created when omitted"},"packagename":{"name":"packagename","type":"option","char":"p","description":"name of the unlocked package to create (ignored when --packageid is given)"},"versionnumber":{"name":"versionnumber","type":"option","description":"version number of the package version in major.minor.patch.build format. Use NEXT as the build number to take the next available one","default":"1.0.0.NEXT"},"versionname":{"name":"versionname","type":"option","description":"name of the package version (defaults to the version number without the build number)"},"versiondescription":{"name":"versiondescription","type":"option","description":"description of the package version"},"installationkey":{"name":"installationkey","type":"option","char":"k","description":"installation key for key-protected package. The package version is installable without a key when omitted"},"wait":{"name":"wait","type":"option","char":"w","description":"number of minutes to wait for the package version creation","default":10}},"args":[]}}}
+{
+  "version": "4.2.3",
+  "commands": {
+    "automig:dump": {
+      "id": "automig:dump",
+      "description": "Dump records in Salesforce org to CSV files for migration usage",
+      "strict": true,
+      "usage": "automig:dump [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "sfdx-migration-automatic",
+      "pluginAlias": "sfdx-migration-automatic",
+      "pluginType": "core",
+      "aliases": [],
+      "hiddenAliases": [],
+      "examples": [
+        "$ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump",
+        "$ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json"
+      ],
+      "flags": {
+        "json": {
+          "name": "json",
+          "type": "boolean",
+          "description": "format output as json",
+          "allowNo": false
+        },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "multiple": false,
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org",
+          "multiple": false
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command",
+          "multiple": false
+        },
+        "config": {
+          "name": "config",
+          "type": "option",
+          "char": "f",
+          "description": "dump configuration file",
+          "multiple": false
+        },
+        "objects": {
+          "name": "objects",
+          "type": "option",
+          "char": "o",
+          "description": "object names to dump, optionally paired with target scope (e.g. Account,Contact,User:related)",
+          "multiple": false
+        },
+        "outputdir": {
+          "name": "outputdir",
+          "type": "option",
+          "char": "d",
+          "description": "output directory for dumped CSV files",
+          "multiple": false
+        },
+        "defaultnamespace": {
+          "name": "defaultnamespace",
+          "type": "option",
+          "char": "n",
+          "description": "developer namespace prefix for managed packages",
+          "multiple": false
+        },
+        "excludebom": {
+          "name": "excludebom",
+          "type": "boolean",
+          "description": "do not prepend byte order mark (\\ufeff) in output files",
+          "allowNo": false
+        },
+        "ignorefields": {
+          "name": "ignorefields",
+          "type": "option",
+          "description": "list of object.field path to exclude from dumping (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
+          "multiple": false
+        },
+        "ignoresystemdate": {
+          "name": "ignoresystemdate",
+          "type": "boolean",
+          "description": "exclude system-defined date fields from the dump target (e.g. CreatedDate, LastModifiedDate)",
+          "allowNo": false
+        },
+        "ignorereadonly": {
+          "name": "ignorereadonly",
+          "type": "boolean",
+          "description": "exclude non-createable fields from the dump target",
+          "allowNo": false
+        },
+        "idmap": {
+          "name": "idmap",
+          "type": "option",
+          "char": "i",
+          "description": "id map file",
+          "multiple": false
+        },
+        "verbose": {
+          "name": "verbose",
+          "type": "boolean",
+          "description": "emit additional command output to stdout",
+          "allowNo": false
+        }
+      },
+      "args": {},
+      "flagsConfig": {
+        "config": {
+          "kind": "filepath",
+          "char": "f",
+          "description": "dump configuration file",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "objects": {
+          "kind": "array",
+          "char": "o",
+          "description": "object names to dump, optionally paired with target scope (e.g. Account,Contact,User:related)",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "outputdir": {
+          "kind": "directory",
+          "char": "d",
+          "description": "output directory for dumped CSV files",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "defaultnamespace": {
+          "kind": "string",
+          "char": "n",
+          "description": "developer namespace prefix for managed packages",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "excludebom": {
+          "kind": "boolean",
+          "description": "do not prepend byte order mark (\\ufeff) in output files",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ignorefields": {
+          "kind": "array",
+          "description": "list of object.field path to exclude from dumping (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "ignoresystemdate": {
+          "kind": "boolean",
+          "description": "exclude system-defined date fields from the dump target (e.g. CreatedDate, LastModifiedDate)",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ignorereadonly": {
+          "kind": "boolean",
+          "description": "exclude non-createable fields from the dump target",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "idmap": {
+          "kind": "filepath",
+          "char": "i",
+          "description": "id map file",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "verbose": {
+          "type": "boolean",
+          "kind": "boolean",
+          "description": "emit additional command output to stdout",
+          "longDescription": "Emit additional command output to stdout.",
+          "allowNo": false
+        }
+      },
+      "requiresUsername": true,
+      "supportsDevhubUsername": false,
+      "requiresProject": false
+    },
+    "automig:load": {
+      "id": "automig:load",
+      "description": "Load records from CSV files to Salesforce org, resolving relationships between records",
+      "strict": true,
+      "usage": "automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "sfdx-migration-automatic",
+      "pluginAlias": "sfdx-migration-automatic",
+      "pluginType": "core",
+      "aliases": [],
+      "hiddenAliases": [],
+      "examples": [
+        "$ sfdx automig:load --targetusername username@example.com --inputdir ./data",
+        "$ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName"
+      ],
+      "flags": {
+        "json": {
+          "name": "json",
+          "type": "boolean",
+          "description": "format output as json",
+          "allowNo": false
+        },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "multiple": false,
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetusername": {
+          "name": "targetusername",
+          "type": "option",
+          "char": "u",
+          "description": "username or alias for the target org; overrides default target org",
+          "multiple": false
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command",
+          "multiple": false
+        },
+        "config": {
+          "name": "config",
+          "type": "option",
+          "char": "f",
+          "description": "load configuration file",
+          "multiple": false
+        },
+        "inputdir": {
+          "name": "inputdir",
+          "type": "option",
+          "char": "d",
+          "description": "directory which includes input data files in CSV",
+          "multiple": false
+        },
+        "targetobjects": {
+          "name": "targetobjects",
+          "type": "option",
+          "description": "list of object names to include in loading",
+          "multiple": false
+        },
+        "ignoreobjects": {
+          "name": "ignoreobjects",
+          "type": "option",
+          "description": "list of object names to exclude from loading",
+          "multiple": false
+        },
+        "mappingobjects": {
+          "name": "mappingobjects",
+          "type": "option",
+          "char": "m",
+          "description": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
+          "multiple": false
+        },
+        "ignorefields": {
+          "name": "ignorefields",
+          "type": "option",
+          "description": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
+          "multiple": false
+        },
+        "defaultnamespace": {
+          "name": "defaultnamespace",
+          "type": "option",
+          "char": "n",
+          "description": "developer namespace prefix for managed packages",
+          "multiple": false
+        },
+        "deletebeforeload": {
+          "name": "deletebeforeload",
+          "type": "boolean",
+          "description": "delete all records in target objects before loading",
+          "allowNo": false
+        },
+        "idmap": {
+          "name": "idmap",
+          "type": "option",
+          "char": "i",
+          "description": "id map file",
+          "multiple": false
+        },
+        "verbose": {
+          "name": "verbose",
+          "type": "boolean",
+          "description": "emit additional command output to stdout",
+          "allowNo": false
+        }
+      },
+      "args": {},
+      "flagsConfig": {
+        "config": {
+          "kind": "filepath",
+          "char": "f",
+          "description": "load configuration file",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "inputdir": {
+          "kind": "directory",
+          "char": "d",
+          "description": "directory which includes input data files in CSV",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "targetobjects": {
+          "kind": "array",
+          "description": "list of object names to include in loading",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "ignoreobjects": {
+          "kind": "array",
+          "description": "list of object names to exclude from loading",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "mappingobjects": {
+          "kind": "array",
+          "char": "m",
+          "description": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "ignorefields": {
+          "kind": "array",
+          "description": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "defaultnamespace": {
+          "kind": "string",
+          "char": "n",
+          "description": "developer namespace prefix for managed packages",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "deletebeforeload": {
+          "kind": "boolean",
+          "description": "delete all records in target objects before loading",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "idmap": {
+          "kind": "filepath",
+          "char": "i",
+          "description": "id map file",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "verbose": {
+          "type": "boolean",
+          "kind": "boolean",
+          "description": "emit additional command output to stdout",
+          "longDescription": "Emit additional command output to stdout.",
+          "allowNo": false
+        }
+      },
+      "requiresUsername": true,
+      "supportsDevhubUsername": false,
+      "requiresProject": false
+    },
+    "automig:package": {
+      "id": "automig:package",
+      "description": "Bundle record data and one-click migration script as an unlocked package version in Dev Hub",
+      "strict": true,
+      "usage": "automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]",
+      "pluginName": "sfdx-migration-automatic",
+      "pluginAlias": "sfdx-migration-automatic",
+      "pluginType": "core",
+      "aliases": [],
+      "hiddenAliases": [],
+      "examples": [
+        "$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data",
+        "$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName",
+        "$ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX --versionnumber 1.1.0.NEXT"
+      ],
+      "flags": {
+        "json": {
+          "name": "json",
+          "type": "boolean",
+          "description": "format output as json",
+          "allowNo": false
+        },
+        "loglevel": {
+          "name": "loglevel",
+          "type": "option",
+          "description": "logging level for this command invocation",
+          "required": false,
+          "helpValue": "(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)",
+          "multiple": false,
+          "options": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "TRACE",
+            "DEBUG",
+            "INFO",
+            "WARN",
+            "ERROR",
+            "FATAL"
+          ],
+          "default": "warn"
+        },
+        "targetdevhubusername": {
+          "name": "targetdevhubusername",
+          "type": "option",
+          "char": "v",
+          "description": "username or alias for the dev hub org; overrides default dev hub org",
+          "multiple": false
+        },
+        "apiversion": {
+          "name": "apiversion",
+          "type": "option",
+          "description": "override the api version used for api requests made by this command",
+          "multiple": false
+        },
+        "config": {
+          "name": "config",
+          "type": "option",
+          "char": "f",
+          "description": "load configuration file",
+          "multiple": false
+        },
+        "inputdir": {
+          "name": "inputdir",
+          "type": "option",
+          "char": "d",
+          "description": "directory which includes input data files in CSV",
+          "multiple": false
+        },
+        "targetobjects": {
+          "name": "targetobjects",
+          "type": "option",
+          "description": "list of object names to include in loading",
+          "multiple": false
+        },
+        "ignoreobjects": {
+          "name": "ignoreobjects",
+          "type": "option",
+          "description": "list of object names to exclude from loading",
+          "multiple": false
+        },
+        "mappingobjects": {
+          "name": "mappingobjects",
+          "type": "option",
+          "char": "m",
+          "description": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
+          "multiple": false
+        },
+        "ignorefields": {
+          "name": "ignorefields",
+          "type": "option",
+          "description": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
+          "multiple": false
+        },
+        "defaultnamespace": {
+          "name": "defaultnamespace",
+          "type": "option",
+          "char": "n",
+          "description": "developer namespace prefix for managed packages",
+          "multiple": false
+        },
+        "packageid": {
+          "name": "packageid",
+          "type": "option",
+          "description": "ID (starts with 0Ho) of the existing unlocked package in Dev Hub to add the version to. A new unlocked package is created when omitted",
+          "multiple": false
+        },
+        "packagename": {
+          "name": "packagename",
+          "type": "option",
+          "char": "p",
+          "description": "name of the unlocked package to create (ignored when --packageid is given)",
+          "multiple": false
+        },
+        "versionnumber": {
+          "name": "versionnumber",
+          "type": "option",
+          "description": "version number of the package version in major.minor.patch.build format. Use NEXT as the build number to take the next available one",
+          "multiple": false,
+          "default": "1.0.0.NEXT"
+        },
+        "versionname": {
+          "name": "versionname",
+          "type": "option",
+          "description": "name of the package version (defaults to the version number without the build number)",
+          "multiple": false
+        },
+        "versiondescription": {
+          "name": "versiondescription",
+          "type": "option",
+          "description": "description of the package version",
+          "multiple": false
+        },
+        "installationkey": {
+          "name": "installationkey",
+          "type": "option",
+          "char": "k",
+          "description": "installation key for key-protected package. The package version is installable without a key when omitted",
+          "multiple": false
+        },
+        "wait": {
+          "name": "wait",
+          "type": "option",
+          "char": "w",
+          "description": "number of minutes to wait for the package version creation",
+          "multiple": false,
+          "default": 10
+        }
+      },
+      "args": {},
+      "flagsConfig": {
+        "config": {
+          "kind": "filepath",
+          "char": "f",
+          "description": "load configuration file",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "inputdir": {
+          "kind": "directory",
+          "char": "d",
+          "description": "directory which includes input data files in CSV",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "targetobjects": {
+          "kind": "array",
+          "description": "list of object names to include in loading",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "ignoreobjects": {
+          "kind": "array",
+          "description": "list of object names to exclude from loading",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "mappingobjects": {
+          "kind": "array",
+          "char": "m",
+          "description": "list of object and key field name pair to map to existing records (e.g. User:Email,RecordType:DeveloperName",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "ignorefields": {
+          "kind": "array",
+          "description": "list of object.field path to exclude from loading (e.g. Account.OwnerId,OpportunityLineItem.TotalPrice)",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "defaultnamespace": {
+          "kind": "string",
+          "char": "n",
+          "description": "developer namespace prefix for managed packages",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "packageid": {
+          "kind": "id",
+          "description": "ID (starts with 0Ho) of the existing unlocked package in Dev Hub to add the version to. A new unlocked package is created when omitted",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "packagename": {
+          "kind": "string",
+          "char": "p",
+          "description": "name of the unlocked package to create (ignored when --packageid is given)",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "versionnumber": {
+          "kind": "string",
+          "description": "version number of the package version in major.minor.patch.build format. Use NEXT as the build number to take the next available one",
+          "default": "1.0.0.NEXT",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "versionname": {
+          "kind": "string",
+          "description": "name of the package version (defaults to the version number without the build number)",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "versiondescription": {
+          "kind": "string",
+          "description": "description of the package version",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "installationkey": {
+          "kind": "string",
+          "char": "k",
+          "description": "installation key for key-protected package. The package version is installable without a key when omitted",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "wait": {
+          "kind": "integer",
+          "char": "w",
+          "description": "number of minutes to wait for the package version creation",
+          "default": 10,
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "requiresUsername": false,
+      "requiresDevhubUsername": true,
+      "requiresProject": false
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { expect, test } from '@salesforce/command/lib/test';
 import * as automig from 'salesforce-migration-automatic';
-import * as fs from 'fs-extra';
+import fs = require('fs-extra');
 
 import { EventEmitter } from 'events';
 
@@ -12,7 +12,7 @@ describe('automig:load', () => {
     .stub(
       automig,
       'AutoMigrator',
-      class AutoMigratorStub extends EventEmitter {
+      <any>class AutoMigratorStub extends EventEmitter {
         async loadCSVData(_inputs: any, _options: any) {
           return {
             totalCount: 1,
@@ -24,14 +24,14 @@ describe('automig:load', () => {
         }
       },
     )
-    .stub(fs, 'readdir', function readdirStub(dirpath: string) {
+    .stub(fs, 'readdir', <any>function readdirStub(dirpath: string) {
       if (dirpath === 'path/to/csv') {
         return ['Account.csv', 'Contact.csv'];
       } else {
         return [];
       }
     })
-    .stub(fs, 'readFile', function readFileStub(filepath: string) {
+    .stub(fs, 'readFile', <any>function readFileStub(filepath: string) {
       switch (filepath) {
         case 'path/to/csv/Account.csv':
           return `Id,ParentId\na001,\na002,a001`;
@@ -61,13 +61,12 @@ describe('automig:load', () => {
           throw new Error('file not found: ' + filepath);
       }
     })
-    .stub(fs, 'outputFile', function outputFileStub(
-      filepath: string,
-      data: string,
-    ) {
-      files[filepath] = data;
-    })
-    .stub(fs, 'existsSync', function existsSync(filepath: string) {
+    .stub(fs, 'outputFile', <any>(
+      function outputFileStub(filepath: string, data: string) {
+        files[filepath] = data;
+      }
+    ))
+    .stub(fs, 'existsSync', <any>function existsSync(filepath: string) {
       switch (filepath) {
         case 'path/to/csv/Account.csv':
         case 'path/to/csv/Contact.csv':
@@ -83,18 +82,23 @@ describe('automig:load', () => {
   /**
    *
    */
-  ts.command(['automig:load', '--inputdir', 'path/to/csv']).it(
-    'runs automig:load --inputdir path/to/csv',
-    (ctx) => {
-      expect(ctx.stdout).includes('Successes: 1');
-    },
-  );
+  ts.command([
+    'automig:load',
+    '--targetusername',
+    'test@example.org',
+    '--inputdir',
+    'path/to/csv',
+  ]).it('runs automig:load --inputdir path/to/csv', (ctx) => {
+    expect(ctx.stdout).includes('Successes: 1');
+  });
 
   /**
    *
    */
   ts.command([
     'automig:load',
+    '--targetusername',
+    'test@example.org',
     '--inputdir',
     'path/to/csv',
     '--mappingobjects',
@@ -111,6 +115,8 @@ describe('automig:load', () => {
    */
   ts.command([
     'automig:load',
+    '--targetusername',
+    'test@example.org',
     '--inputdir',
     'path/to/csv',
     '--idmap',
@@ -128,6 +134,8 @@ describe('automig:load', () => {
    */
   ts.command([
     'automig:load',
+    '--targetusername',
+    'test@example.org',
     '--config',
     'path/to/automig-load-config.json',
   ]).it(

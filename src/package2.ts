@@ -1,4 +1,4 @@
-import * as AdmZip from 'adm-zip';
+import AdmZip = require('adm-zip');
 import { Connection } from '@salesforce/core';
 import {
   buildPackageZip,

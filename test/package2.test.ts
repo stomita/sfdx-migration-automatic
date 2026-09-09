@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as AdmZip from 'adm-zip';
+import AdmZip = require('adm-zip');
 import * as sinon from 'sinon';
 import {
   buildVersionInfo,
@@ -215,7 +215,7 @@ describe('package2', () => {
     try {
       await waitPackage2VersionCreateRequest(conn, '08c000000000001AAA', 60000);
     } catch (e) {
-      error = e;
+      error = e as Error;
     }
     expect(error?.message).to.include('something went wrong');
   });

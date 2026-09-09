@@ -1,17 +1,15 @@
-import { core, flags, SfdxCommand } from '@salesforce/command';
+import { flags, SfdxCommand } from '@salesforce/command';
+import { Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import { readLoadConfig, readUploadInputs } from '../../loadenv';
 import { createPackageVersion } from '../../package2';
 
 // Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages(
-  'sfdx-migration-automatic',
-  'package',
-);
+const messages = Messages.loadMessages('sfdx-migration-automatic', 'package');
 
 export default class Package extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');

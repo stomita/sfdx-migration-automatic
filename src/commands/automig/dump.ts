@@ -1,4 +1,5 @@
-import { core, flags, SfdxCommand } from '@salesforce/command';
+import { flags, SfdxCommand } from '@salesforce/command';
+import { Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import { existsSync, readFile, outputFile } from 'fs-extra';
 import { Connection } from 'jsforce';
@@ -11,11 +12,11 @@ import {
 import { convertObjectLiteralToMap, toStringList } from '../../util';
 
 // Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('sfdx-migration-automatic', 'dump');
+const messages = Messages.loadMessages('sfdx-migration-automatic', 'dump');
 
 export default class Dump extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
@@ -140,7 +141,7 @@ export default class Dump extends SfdxCommand {
     const { accessToken, instanceUrl } = conn;
     const defaultNamespace: string | undefined = this.flags.defaultnamespace;
     const conn2 = new Connection({
-      accessToken,
+      accessToken: accessToken ?? undefined,
       instanceUrl,
       version: this.flags.apiversion,
       callOptions: defaultNamespace ? { defaultNamespace } : undefined,
@@ -205,16 +206,8 @@ export default class Dump extends SfdxCommand {
     );
     this.ux.log();
     this.ux.table(results, {
-      columns: [
-        {
-          key: 'filepath',
-          label: 'Output File Path',
-        },
-        {
-          key: 'count',
-          label: 'Count',
-        },
-      ],
+      filepath: { header: 'Output File Path' },
+      count: { header: 'Count' },
     });
     return { fetchedCount, results };
   }

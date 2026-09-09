@@ -37,56 +37,45 @@ Dump records in Salesforce org to CSV files for migration usage
 
 ```
 USAGE
-  $ sfdx automig:dump [--json] [--loglevel 
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx automig:dump [--json] [--loglevel
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -d, --outputdir=outputdir                                                         output directory for dumped CSV
+FLAGS
+  -d, --outputdir=<value>                                                           output directory for dumped CSV
                                                                                     files
-
-  -f, --config=config                                                               dump configuration file
-
-  -i, --idmap=idmap                                                                 id map file
-
-  -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
+  -f, --config=<value>                                                              dump configuration file
+  -i, --idmap=<value>                                                               id map file
+  -n, --defaultnamespace=<value>                                                    developer namespace prefix for
                                                                                     managed packages
-
-  -o, --objects=objects                                                             object names to dump, optionally
+  -o, --objects=<value>                                                             object names to dump, optionally
                                                                                     paired with target scope (e.g.
                                                                                     Account,Contact,User:related)
-
-  -u, --targetusername=targetusername                                               username or alias for the target
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --excludebom                                                                      do not prepend byte order mark
                                                                                     (\ufeff) in output files
-
-  --ignorefields=ignorefields                                                       list of object.field path to exclude
-                                                                                    from dumping (e.g.
-                                                                                    Account.OwnerId,OpportunityLineItem.
-                                                                                    TotalPrice)
-
+  --ignorefields=<value>                                                            list of object.field path to exclude
+                                                                                    from dumping (e.g. Account.OwnerId,O
+                                                                                    pportunityLineItem.TotalPrice)
   --ignorereadonly                                                                  exclude non-createable fields from
                                                                                     the dump target
-
   --ignoresystemdate                                                                exclude system-defined date fields
                                                                                     from the dump target (e.g.
                                                                                     CreatedDate, LastModifiedDate)
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
-
   --verbose                                                                         emit additional command output to
                                                                                     stdout
 
+DESCRIPTION
+  Dump records in Salesforce org to CSV files for migration usage
+
 EXAMPLES
-  $ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related 
-  --outputdir ./dump
+  $ sfdx automig:dump --targetusername username@example.com --objects Opportunity,Case,Account:related,Task:related --outputdir ./dump
+
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
@@ -98,57 +87,46 @@ Load records from CSV files to Salesforce org, resolving relationships between r
 
 ```
 USAGE
-  $ sfdx automig:load [--json] [--loglevel 
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx automig:load [--json] [--loglevel
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -d, --inputdir=inputdir                                                           directory which includes input data
+FLAGS
+  -d, --inputdir=<value>                                                            directory which includes input data
                                                                                     files in CSV
-
-  -f, --config=config                                                               load configuration file
-
-  -i, --idmap=idmap                                                                 id map file
-
-  -m, --mappingobjects=mappingobjects                                               list of object and key field name
+  -f, --config=<value>                                                              load configuration file
+  -i, --idmap=<value>                                                               id map file
+  -m, --mappingobjects=<value>                                                      list of object and key field name
                                                                                     pair to map to existing records
                                                                                     (e.g.
                                                                                     User:Email,RecordType:DeveloperName
-
-  -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
+  -n, --defaultnamespace=<value>                                                    developer namespace prefix for
                                                                                     managed packages
-
-  -u, --targetusername=targetusername                                               username or alias for the target
+  -u, --targetusername=<value>                                                      username or alias for the target
                                                                                     org; overrides default target org
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
   --deletebeforeload                                                                delete all records in target objects
                                                                                     before loading
-
-  --ignorefields=ignorefields                                                       list of object.field path to exclude
-                                                                                    from loading (e.g.
-                                                                                    Account.OwnerId,OpportunityLineItem.
-                                                                                    TotalPrice)
-
-  --ignoreobjects=ignoreobjects                                                     list of object names to exclude from
+  --ignorefields=<value>                                                            list of object.field path to exclude
+                                                                                    from loading (e.g. Account.OwnerId,O
+                                                                                    pportunityLineItem.TotalPrice)
+  --ignoreobjects=<value>                                                           list of object names to exclude from
                                                                                     loading
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
-
-  --targetobjects=targetobjects                                                     list of object names to include in
+  --targetobjects=<value>                                                           list of object names to include in
                                                                                     loading
-
   --verbose                                                                         emit additional command output to
                                                                                     stdout
 
+DESCRIPTION
+  Load records from CSV files to Salesforce org, resolving relationships between records
+
 EXAMPLES
   $ sfdx automig:load --targetusername username@example.com --inputdir ./data
-  $ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects 
-  User:Email,RecordType:DeveloperName
+
+  $ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName
 ```
 
 _See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/load.ts)_
@@ -159,81 +137,66 @@ Bundle record data and one-click migration script as an unlocked package version
 
 ```
 USAGE
-  $ sfdx automig:package [--json] [--loglevel 
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx automig:package [--json] [--loglevel
+    trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
-OPTIONS
-  -d, --inputdir=inputdir                                                           directory which includes input data
+FLAGS
+  -d, --inputdir=<value>                                                            directory which includes input data
                                                                                     files in CSV
-
-  -f, --config=config                                                               load configuration file
-
-  -k, --installationkey=installationkey                                             installation key for key-protected
+  -f, --config=<value>                                                              load configuration file
+  -k, --installationkey=<value>                                                     installation key for key-protected
                                                                                     package. The package version is
                                                                                     installable without a key when
                                                                                     omitted
-
-  -m, --mappingobjects=mappingobjects                                               list of object and key field name
+  -m, --mappingobjects=<value>                                                      list of object and key field name
                                                                                     pair to map to existing records
                                                                                     (e.g.
                                                                                     User:Email,RecordType:DeveloperName
-
-  -n, --defaultnamespace=defaultnamespace                                           developer namespace prefix for
+  -n, --defaultnamespace=<value>                                                    developer namespace prefix for
                                                                                     managed packages
-
-  -p, --packagename=packagename                                                     name of the unlocked package to
+  -p, --packagename=<value>                                                         name of the unlocked package to
                                                                                     create (ignored when --packageid is
                                                                                     given)
-
-  -v, --targetdevhubusername=targetdevhubusername                                   username or alias for the dev hub
+  -v, --targetdevhubusername=<value>                                                username or alias for the dev hub
                                                                                     org; overrides default dev hub org
-
-  -w, --wait=wait                                                                   [default: 10] number of minutes to
+  -w, --wait=<value>                                                                [default: 10] number of minutes to
                                                                                     wait for the package version
                                                                                     creation
-
-  --apiversion=apiversion                                                           override the api version used for
+  --apiversion=<value>                                                              override the api version used for
                                                                                     api requests made by this command
-
-  --ignorefields=ignorefields                                                       list of object.field path to exclude
-                                                                                    from loading (e.g.
-                                                                                    Account.OwnerId,OpportunityLineItem.
-                                                                                    TotalPrice)
-
-  --ignoreobjects=ignoreobjects                                                     list of object names to exclude from
+  --ignorefields=<value>                                                            list of object.field path to exclude
+                                                                                    from loading (e.g. Account.OwnerId,O
+                                                                                    pportunityLineItem.TotalPrice)
+  --ignoreobjects=<value>                                                           list of object names to exclude from
                                                                                     loading
-
   --json                                                                            format output as json
-
   --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
                                                                                     this command invocation
-
-  --packageid=packageid                                                             ID (starts with 0Ho) of the existing
+  --packageid=<value>                                                               ID (starts with 0Ho) of the existing
                                                                                     unlocked package in Dev Hub to add
                                                                                     the version to. A new unlocked
                                                                                     package is created when omitted
-
-  --targetobjects=targetobjects                                                     list of object names to include in
+  --targetobjects=<value>                                                           list of object names to include in
                                                                                     loading
-
-  --versiondescription=versiondescription                                           description of the package version
-
-  --versionname=versionname                                                         name of the package version
+  --versiondescription=<value>                                                      description of the package version
+  --versionname=<value>                                                             name of the package version
                                                                                     (defaults to the version number
                                                                                     without the build number)
-
-  --versionnumber=versionnumber                                                     [default: 1.0.0.NEXT] version number
+  --versionnumber=<value>                                                           [default: 1.0.0.NEXT] version number
                                                                                     of the package version in
                                                                                     major.minor.patch.build format. Use
                                                                                     NEXT as the build number to take the
                                                                                     next available one
 
+DESCRIPTION
+  Bundle record data and one-click migration script as an unlocked package version in Dev Hub
+
 EXAMPLES
   $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data
-  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --mappingobjects 
-  User:Email,RecordType:DeveloperName
-  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX 
-  --versionnumber 1.1.0.NEXT
+
+  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName
+
+  $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX --versionnumber 1.1.0.NEXT
 ```
 
 _See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/package.ts)_
