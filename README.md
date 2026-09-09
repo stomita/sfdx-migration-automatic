@@ -79,7 +79,7 @@ EXAMPLES
   $ sfdx automig:dump --targetusername username@example.com --config automig-dump-config.json
 ```
 
-_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/dump.ts)_
+_See code: [src/commands/automig/dump.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v5.0.0/src/commands/automig/dump.ts)_
 
 ## `sfdx automig:load [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -138,7 +138,7 @@ EXAMPLES
   $ sfdx automig:load --targetusername username@example.com --inputdir ./data --mappingobjects User:Email,RecordType:DeveloperName
 ```
 
-_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/load.ts)_
+_See code: [src/commands/automig/load.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v5.0.0/src/commands/automig/load.ts)_
 
 ## `sfdx automig:package [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -216,7 +216,7 @@ EXAMPLES
   $ sfdx automig:package --targetdevhubusername devhub@example.com --inputdir ./data --packageid 0Hoxx00000000xxXXX --versionnumber 1.1.0.NEXT
 ```
 
-_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v4.2.3/src/commands/automig/package.ts)_
+_See code: [src/commands/automig/package.ts](https://github.com/stomita/sfdx-migration-automatic/blob/v5.0.0/src/commands/automig/package.ts)_
 <!-- commandsstop -->
 
 ## Configuration
